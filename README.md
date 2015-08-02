@@ -1,3 +1,2 @@
-# This is my first projects
-# UnionOfPolygons - C#
-# NumericalAnalyzis - Java
+UnionOfPolygons - C#
+NumericalAnalyzis - Java
