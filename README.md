@@ -1,2 +1,3 @@
-UnionOfPolygons - C#
-NumericalAnalyzis - Java
+UnionOfPolygons - <b>C#</b>
+<br>
+NumericalAnalyzis - <b>Java</b>
