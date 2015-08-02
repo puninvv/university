@@ -1,0 +1,9 @@
+C:\Users\Виктор\Documents\Visual Studio 2013\Projects\Kursach\Kursach\bin\Release\Kursach.exe.config
+C:\Users\Виктор\Documents\Visual Studio 2013\Projects\Kursach\Kursach\bin\Release\Kursach.exe
+C:\Users\Виктор\Documents\Visual Studio 2013\Projects\Kursach\Kursach\bin\Release\Kursach.pdb
+C:\Users\Виктор\Documents\Visual Studio 2013\Projects\Kursach\Kursach\obj\Release\Kursach.MainForm.resources
+C:\Users\Виктор\Documents\Visual Studio 2013\Projects\Kursach\Kursach\obj\Release\Kursach.Properties.Resources.resources
+C:\Users\Виктор\Documents\Visual Studio 2013\Projects\Kursach\Kursach\obj\Release\Polygons.csproj.GenerateResource.Cache
+C:\Users\Виктор\Documents\Visual Studio 2013\Projects\Kursach\Kursach\obj\Release\Kursach.exe
+C:\Users\Виктор\Documents\Visual Studio 2013\Projects\Kursach\Kursach\obj\Release\Kursach.pdb
+C:\Users\Виктор\Documents\Visual Studio 2013\Projects\Kursach\Kursach\obj\Release\Polygons.csprojResolveAssemblyReference.cache
