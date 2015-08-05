@@ -27,6 +27,6 @@ public class Star {
 
         myPointListMatcher matcher = new myPointListMatcher();
 
-        System.out.println(matcher.CompareEquals(pointsSecond, pointsFirst, 0.01, 0.1));
+        System.out.println(matcher.CompareImagination(pointsFirst, pointsSecond, 0.01, 0.1));
     }
 }
