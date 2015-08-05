@@ -26,6 +26,6 @@ public class Square {
 
         myPointListMatcher matcher = new myPointListMatcher();
 
-        System.out.println(matcher.Compare(pointsFirst, pointsSecond, 0.01, 0.1));
+        System.out.println(matcher.CompareImagination(pointsFirst, pointsSecond, 0.01, 0.1));
     }
 }

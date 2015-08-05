@@ -28,6 +28,6 @@ public class SmthStrange {
         pointsSecond.add(new myPoint(7,3));
 
 
-        System.out.println(new myPointListMatcher().CompareV2(pointsFirst, pointsSecond, 0.01, 0.1));
+        System.out.println(new myPointListMatcher().CompareEquals(pointsFirst, pointsSecond, 0.01, 0.1));
     }
 }

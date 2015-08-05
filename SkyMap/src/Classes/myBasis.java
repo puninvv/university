@@ -102,8 +102,8 @@ public class myBasis {
 
     public boolean equals(myBasis basis) {
         return e1.equalsLength(basis.e1) && e2.equalsLength(basis.e2) &&
-                e1.DotProduct(e2) == basis.e1.DotProduct(basis.e2) &&
-                e1.ScalarProduct(e2) == basis.e1.ScalarProduct(e2);
+                e1.DotProduct(e2) == basis.e1.DotProduct(basis.e2);
+                //e1.ScalarProduct(e2) == basis.e1.ScalarProduct(e2);
     }
 
     @Override

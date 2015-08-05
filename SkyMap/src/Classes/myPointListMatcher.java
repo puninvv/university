@@ -15,7 +15,7 @@ public class myPointListMatcher {
     private List<myPoint> equalsPointsTMP = null;
     private List<myPoint> nearPointsTMP = null;
 
-    public List<myPoint> Compare(List<myPoint> pointsFrom, List<myPoint> pointsTo, double equalDistance, double nearDistance){
+    public List<myPoint> CompareImagination(List<myPoint> pointsFrom, List<myPoint> pointsTo, double equalDistance, double nearDistance){
         equalsPoints = null;
         nearPoints = null;
 
@@ -68,7 +68,7 @@ public class myPointListMatcher {
         return result;
     }
 
-    public List<myPoint> CompareV2(List<myPoint> pointsFrom, List<myPoint> pointsTo, double equalDistance, double nearDistance){
+    public List<myPoint> CompareEquals(List<myPoint> pointsFrom, List<myPoint> pointsTo, double equalDistance, double nearDistance){
         equalsPoints = null;
         nearPoints = null;
 
