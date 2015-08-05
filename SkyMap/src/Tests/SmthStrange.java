@@ -11,21 +11,23 @@ import java.util.List;
  */
 public class SmthStrange {
     public static void main(String[] args) {
-        List<myPoint> pointsFirst = new LinkedList<myPoint>();
+        List<myPoint> pointsFirst = new LinkedList<>();
         pointsFirst.add(new myPoint(0,0));
         pointsFirst.add(new myPoint(-1,1));
+        pointsFirst.add(new myPoint(1,1));
+        pointsFirst.add(new myPoint(-1,-1));
         pointsFirst.add(new myPoint(1,-1));
         pointsFirst.add(new myPoint(2,2));
         pointsFirst.add(new myPoint(-2,-2));
 
 
-        List<myPoint> pointsSecond = new LinkedList<myPoint>();
+        List<myPoint> pointsSecond = new LinkedList<>();
         pointsSecond.add(new myPoint(5,5));
         pointsSecond.add(new myPoint(6,6));
         pointsSecond.add(new myPoint(3,7));
         pointsSecond.add(new myPoint(7,3));
 
 
-        System.out.println(new myPointListMatcher().Compare(pointsFirst, pointsSecond, 0.01, 0.1));
+        System.out.println(new myPointListMatcher().CompareV2(pointsFirst, pointsSecond, 0.01, 0.1));
     }
 }

@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Created by ������ on 04.08.2015.
+ * Created by Виктор on 04.08.2015.
  */
 public class Square {
     public static void main(String[] args) {

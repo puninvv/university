@@ -2,7 +2,6 @@ package Classes;
 
 import FromUniversity.Matrix;
 
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -22,7 +21,7 @@ public class myBasis {
             throw new IllegalArgumentException();
     }
 
-    public myBasis(List<myPoint> points, myPoint base){
+    public myBasis(List<myPoint> points, myPoint base) {
         double minDistance1 = -1;
         double minDistance2 = -1;
         int minI1 = -1;
@@ -32,14 +31,13 @@ public class myBasis {
             if (points.get(i).equals(base)) continue;
 
             double distance = points.get(i).getDistance(base);
-            if (minI1 == -1 || distance < minDistance1){
+            if (minI1 == -1 || distance < minDistance1) {
                 minI2 = minI1;
                 minDistance2 = minDistance1;
 
                 minDistance1 = distance;
                 minI1 = i;
-            }else
-            if (minI2 == -1 || distance <= minDistance2){
+            } else if (minI2 == -1 || distance <= minDistance2) {
                 minI2 = i;
                 minDistance2 = distance;
             }
@@ -47,14 +45,11 @@ public class myBasis {
 
         myVector v1 = new myVector(base, points.get(minI1));
         myVector v2 = new myVector(base, points.get(minI2));
-        if (v1.DotProduct(v2) > 0)
-        {
+        if (v1.DotProduct(v2) > 0) {
             start = base;
             e1 = v1;
             e2 = v2;
-        } else
-        if (v1.DotProduct(v2) < 0)
-        {
+        } else if (v1.DotProduct(v2) < 0) {
             start = base;
             e1 = v2;
             e2 = v1;
@@ -79,17 +74,17 @@ public class myBasis {
 
         double[] x = new Matrix(A).CountSLAY_PLU(b);
 
-        return new myPoint(x[0],x[1]);
+        return new myPoint(x[0], x[1]);
     }
 
-    public myPoint getPoint(myPoint coordinates){
+    public myPoint getPoint(myPoint coordinates) {
         double dx = e1.getDX() * coordinates.getX() + start.getX() + e2.getDX() * coordinates.getY();
         double dy = e1.getDY() * coordinates.getX() + start.getY() + e2.getDY() * coordinates.getY();
         myPoint point = new myPoint(dx, dy);
         return point;
     }
 
-    public List<myPoint> updateCoordinates(List<myPoint> points){
+    public List<myPoint> updateCoordinates(List<myPoint> points) {
         List<myPoint> result = new LinkedList<>();
         for (myPoint point : points) {
             result.add(getCoordinates(point));
@@ -97,11 +92,22 @@ public class myBasis {
         return result;
     }
 
-    public List<myPoint> updatePoints(List<myPoint> coordinates){
+    public List<myPoint> updatePoints(List<myPoint> coordinates) {
         List<myPoint> result = new LinkedList<>();
         for (myPoint point : coordinates) {
             result.add(getPoint(point));
         }
         return result;
+    }
+
+    public boolean equals(myBasis basis) {
+        return e1.equalsLength(basis.e1) && e2.equalsLength(basis.e2) &&
+                e1.DotProduct(e2) == basis.e1.DotProduct(basis.e2) &&
+                e1.ScalarProduct(e2) == basis.e1.ScalarProduct(e2);
+    }
+
+    @Override
+    public String toString() {
+        return "myBasis{" + "start=" + start + ", e1=" + e1 + ", e2=" + e2 + "}";
     }
 }

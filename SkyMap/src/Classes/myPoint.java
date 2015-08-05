@@ -24,9 +24,11 @@ public class myPoint {
     public String toString(){
         return "("+x+";"+y+")";
     }
+
     public boolean equals(myPoint point){
         return ((point.x == x) && (point.y == y));
     }
+
     public double getDistance(myPoint point){
         return Math.sqrt( (x - point.x) * (x - point.x) + (y - point.y)*(y - point.y) );
     }

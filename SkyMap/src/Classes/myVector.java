@@ -36,4 +36,16 @@ public class myVector {
     public double DotProduct(myVector vector) {
         return getDX() * vector.getDY() - getDY() * vector.getDX();
     }
+
+    public double ScalarProduct(myVector vector) {return getDX() * vector.getDX() + getDX() * vector.getDY();}
+
+    public double getLength(){
+        return end.getDistance(start);
+    }
+
+    public boolean equalsLength(myVector vector){
+        return this.getLength() == vector.getLength();
+    }
+
+
 }
