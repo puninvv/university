@@ -19,3 +19,9 @@ C:\Users\Виктор\Desktop\WindowsFormsApplication3\WindowsFormsApplication3\
 C:\Users\Виктор\Documents\CUDA-Fingerprinting\Code\DelaunauTriangulationSample\WindowsFormsApplication3\bin\Debug\WindowsFormsApplication3.exe.config
 C:\Users\Виктор\Documents\CUDA-Fingerprinting\Code\DelaunauTriangulationSample\WindowsFormsApplication3\obj\Debug\WindowsFormsApplication3.exe
 C:\Users\Виктор\Documents\CUDA-Fingerprinting\Code\DelaunauTriangulationSample\WindowsFormsApplication3\obj\Debug\WindowsFormsApplication3.pdb
+C:\Users\Виктор\Documents\CUDA-Fingerprinting\Code\DelaunauTriangulationSample\WindowsFormsApplication3\bin\Debug\WindowsFormsApplication3.exe
+C:\Users\Виктор\Documents\CUDA-Fingerprinting\Code\DelaunauTriangulationSample\WindowsFormsApplication3\bin\Debug\WindowsFormsApplication3.pdb
+C:\Users\Виктор\Documents\CUDA-Fingerprinting\Code\DelaunauTriangulationSample\WindowsFormsApplication3\obj\Debug\WindowsFormsApplication3.csprojResolveAssemblyReference.cache
+C:\Users\Виктор\Documents\CUDA-Fingerprinting\Code\DelaunauTriangulationSample\WindowsFormsApplication3\obj\Debug\WindowsFormsApplication3.MainForm.resources
+C:\Users\Виктор\Documents\CUDA-Fingerprinting\Code\DelaunauTriangulationSample\WindowsFormsApplication3\obj\Debug\WindowsFormsApplication3.Properties.Resources.resources
+C:\Users\Виктор\Documents\CUDA-Fingerprinting\Code\DelaunauTriangulationSample\WindowsFormsApplication3\obj\Debug\WindowsFormsApplication3.csproj.GenerateResource.Cache
