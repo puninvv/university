@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace DelaunauTriangulation
+namespace Client
 {
     static class Program
     {
@@ -16,7 +16,7 @@ namespace DelaunauTriangulation
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainForm());
+            Application.Run(new Client());
         }
     }
 }
