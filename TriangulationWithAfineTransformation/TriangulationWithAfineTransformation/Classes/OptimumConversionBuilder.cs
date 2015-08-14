@@ -6,23 +6,62 @@ using System.Threading.Tasks;
 
 namespace TriangulationWithAfineTransformation.Classes
 {
-    class OptimumConversionBuilder
+    internal class OptimumConversionBuilder : IComparable<OptimumConversionBuilder>
     {
         public Triangle result
         {
             get;
             private set;
         }
-        
+
+        public Triangle SrcTriangle
+        {
+            get;
+            private set;
+        }
+
+        public Triangle DestTriangle
+        {
+            get;
+            private set;
+        }
+
         private double[] transformation;
 
-        public double Dx { get { return transformation[0]; } }
-        public double Dy { get { return transformation[1]; } }
-        public double Phi { get { return transformation[2]; } }
-        public double Distance { get; private set; }
+        public double Dx
+        {
+            get
+            {
+                return transformation[0];
+            }
+        }
+
+        public double Dy
+        {
+            get
+            {
+                return transformation[1];
+            }
+        }
+
+        public double Phi
+        {
+            get
+            {
+                return transformation[2];
+            }
+        }
+
+        public double Distance
+        {
+            get; private set;
+        }
 
         public OptimumConversionBuilder(Triangle src, Triangle dest, bool canChangeVertexes = false, bool canReflect = false)
         {
+            SrcTriangle = src;
+            DestTriangle = dest;
+
             result = src;
             transformation = new double[3];
 
@@ -135,7 +174,6 @@ namespace TriangulationWithAfineTransformation.Classes
 
                 Distance = nearestDistance;
             }
-
         }
 
         public class OptimumConversionOperator
@@ -145,6 +183,7 @@ namespace TriangulationWithAfineTransformation.Classes
                 get;
                 private set;
             }
+
             private double ABCx;
             private double ABCy;
 
@@ -153,6 +192,7 @@ namespace TriangulationWithAfineTransformation.Classes
                 get;
                 private set;
             }
+
             private double ABC_x;
             private double ABC_y;
 
@@ -185,7 +225,7 @@ namespace TriangulationWithAfineTransformation.Classes
                         +ABC.B.X * ABC_.B.X + ABC.B.Y * ABC_.B.Y +
                         +ABC.C.X * ABC_.C.X + ABC.C.Y * ABC_.C.Y;
             }
-            
+
             public Triangle GetOptimumTriangle()
             {
                 transformation = SolveNonLinearSystem(0.0000000001, 10000);
@@ -197,10 +237,12 @@ namespace TriangulationWithAfineTransformation.Classes
             {
                 return ABC_x * Math.Cos(phi) - ABC_y * Math.Sin(phi) + dx - ABCx;
             }
+
             private double f2(double dx, double dy, double phi)
             {
                 return ABC_x * Math.Sin(phi) + ABC_y * Math.Cos(phi) + dy - ABCy;
             }
+
             private double f3(double dx, double dy, double phi)
             {
                 return Math.Cos(phi) * (3 * dx * ABC_y - 3 * dy * ABC_x + vectorsProductions) +
@@ -211,10 +253,12 @@ namespace TriangulationWithAfineTransformation.Classes
             {
                 return 1;
             }
+
             private double df1dy(double dx, double dy, double phi)
             {
                 return 0;
             }
+
             private double df1dphi(double dx, double dy, double phi)
             {
                 return -ABC_x * Math.Sin(phi) - ABC_y * Math.Cos(phi);
@@ -224,10 +268,12 @@ namespace TriangulationWithAfineTransformation.Classes
             {
                 return 0;
             }
+
             private double df2dy(double dx, double dy, double phi)
             {
                 return 1;
             }
+
             private double df2dphi(double dx, double dy, double phi)
             {
                 return ABC_x * Math.Cos(phi) - ABC_y * Math.Sin(phi);
@@ -237,10 +283,12 @@ namespace TriangulationWithAfineTransformation.Classes
             {
                 return 3 * ABC_y * Math.Cos(phi) + 3 * ABC_x * Math.Sin(phi);
             }
+
             private double df3dy(double dx, double dy, double phi)
             {
                 return -3 * ABC_x * Math.Cos(phi) - 3 * ABC_y * Math.Sin(phi);
             }
+
             private double df3dphi(double dx, double dy, double phi)
             {
                 return -Math.Sin(phi) * (3 * dx * ABC_y - 3 * dy * ABC_x + vectorsProductions) +
@@ -263,6 +311,7 @@ namespace TriangulationWithAfineTransformation.Classes
                 matrix[2, 2] = df3dphi(dx, dy, phi);
                 return matrix;
             }
+
             private double[] getF(double dx, double dy, double phi)
             {
                 double[] result = new double[3];
@@ -292,6 +341,15 @@ namespace TriangulationWithAfineTransformation.Classes
 
                 return xk;
             }
+        }
+
+        public int CompareTo(OptimumConversionBuilder other)
+        {
+            if (Distance > other.Distance)
+                return 1;
+            if (Distance < other.Distance)
+                return -1;
+            return 0;
         }
     }
 }

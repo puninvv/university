@@ -77,6 +77,23 @@ namespace TriangulationWithAfineTransformation.Classes
             return false;
         }
 
+        public bool Equals(Triangle triangle, double distance)
+        {
+            if (A.GetDistance(triangle.A) < distance && B.GetDistance(triangle.B) < distance && C.GetDistance(triangle.C) < distance)
+                return true;
+            if (A.GetDistance(triangle.A) < distance && B.GetDistance(triangle.C) < distance && C.GetDistance(triangle.B) < distance)
+                return true;
+            if (A.GetDistance(triangle.B) < distance && B.GetDistance(triangle.C) < distance && C.GetDistance(triangle.A) < distance)
+                return true;
+            if (A.GetDistance(triangle.B) < distance && B.GetDistance(triangle.A) < distance && C.GetDistance(triangle.C) < distance)
+                return true;
+            if (A.GetDistance(triangle.C) < distance && B.GetDistance(triangle.B) < distance && C.GetDistance(triangle.A) < distance)
+                return true;
+            if (A.GetDistance(triangle.C) < distance && B.GetDistance(triangle.A) < distance && C.GetDistance(triangle.B) < distance)
+                return true;
+            return false;
+        }
+
         public Triangle GetTriangleWithCommonSide(List<Triangle> triangles, bool a_s, bool b_s, bool c_s)
         {
             foreach (Triangle t in triangles)
@@ -84,10 +101,10 @@ namespace TriangulationWithAfineTransformation.Classes
                     return t;
                 else
                     if ((t.a.Equals(b) || t.b.Equals(b) || t.c.Equals(b)) && b_s)
-                        return t;
-                    else
+                    return t;
+                else
                         if ((t.a.Equals(c) || t.b.Equals(c) || t.c.Equals(c)) && c_s)
-                            return t;
+                    return t;
             return null;
         }
 

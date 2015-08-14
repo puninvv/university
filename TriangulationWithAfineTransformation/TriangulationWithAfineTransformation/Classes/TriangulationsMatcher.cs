@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TriangulationWithAfineTransformation.Classes
 {
-    class TriangulationsMatcher
+    internal class TriangulationsMatcher
     {
         private List<Triangle> TrianglesFrom;
         private List<Triangle> TrianglesTo;
@@ -17,14 +17,70 @@ namespace TriangulationWithAfineTransformation.Classes
             TrianglesTo = trianglesTo;
         }
 
-        private OptimumConversionBuilder FindNearestTriangle(Triangle triangle, List<Triangle> list){
-            OptimumConversionBuilder result = null;
+        private List<OptimumConversionBuilder> CreatListWithDistances()
+        {
+            List<OptimumConversionBuilder> result = null;
 
-            foreach (Triangle t in list)
+            foreach (Triangle tFrom in TrianglesFrom)
             {
-                OptimumConversionBuilder tmpResult = new OptimumConversionBuilder(triangle, t);
-                if (result == null || tmpResult.Distance < result.Distance)
-                    result = tmpResult;
+                OptimumConversionBuilder tmpToAdd = null;
+                foreach (Triangle tTo in TrianglesTo)
+                {
+                    OptimumConversionBuilder tmpTo = new OptimumConversionBuilder(tFrom, tTo);
+                    if (tmpToAdd == null || tmpTo.Distance < tmpToAdd.Distance)
+                        tmpToAdd = tmpTo;
+                }
+                result.Add(tmpToAdd);
+            }
+
+            result.Sort();
+
+            return result;
+        }
+
+        private double[] Match(double distance)
+        {
+            double[] result = new double[3];            //result[0] - полностью совпали
+                                                        //result[1] - почти совпали (в пределах погрешности)
+                                                        //result[2] - сумма расстояний
+
+            List<OptimumConversionBuilder> builders = new List<OptimumConversionBuilder>();
+            OptimumConversionBuilder resultBuilder = null;
+
+            foreach (OptimumConversionBuilder builder in builders)
+            {
+                double[] tmpResult = new double[3];
+
+                foreach (Triangle tFrom in TrianglesFrom)
+                {
+                    Triangle transformedTFrom = tFrom.GetTransformation(builder.Dx, builder.Dy, builder.Phi);
+
+                    bool equalsAdded = false;
+
+                    foreach (Triangle tTo in TrianglesTo)
+                    {
+                        if (transformedTFrom.Equals(tTo))
+                        {
+                            tmpResult[0]++;
+                            tmpResult[2] = transformedTFrom.GetDistanceTo(tTo);
+                            equalsAdded = true;
+                            break;
+                        }
+                    }
+
+                    if (!equalsAdded)
+                    {
+                        foreach (Triangle tTo in TrianglesTo)
+                        {
+                            if (transformedTFrom.Equals(tTo, distance))
+                            {
+                                tmpResult[1]++;
+                                tmpResult[2] = transformedTFrom.GetDistanceTo(tTo);
+                                break;
+                            }
+                        }
+                    }
+                }
             }
 
             return result;
