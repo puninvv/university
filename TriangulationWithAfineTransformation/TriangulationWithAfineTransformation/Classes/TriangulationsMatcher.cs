@@ -46,43 +46,81 @@ namespace TriangulationWithAfineTransformation.Classes
 
             List<OptimumConversionBuilder> builders = new List<OptimumConversionBuilder>();
             OptimumConversionBuilder resultBuilder = null;
+            /*
+             * Для каждого билдера: 
+             * 1) Преобразуем каждый треугольник из tForm в
+             * 2) Находим для него совпадение или примерное совпадение
+             * 3) Если совпадение не нашлось, ищем примерное совпадение 
+             *      (каждая точка удалена не более чем на distance)
+             * 4) Удаляем найденый треугольник из списка
+             */
 
             foreach (OptimumConversionBuilder builder in builders)
             {
                 double[] tmpResult = new double[3];
+                List<Triangle> tmpTrianglesTo = new List<Triangle>(TrianglesTo);
 
                 foreach (Triangle tFrom in TrianglesFrom)
                 {
                     Triangle transformedTFrom = tFrom.GetTransformation(builder.Dx, builder.Dy, builder.Phi);
-
-                    bool equalsAdded = false;
-
-                    foreach (Triangle tTo in TrianglesTo)
+                    Triangle tFromEquals = FindEquals(transformedTFrom, tmpTrianglesTo);
+                    if (tFromEquals != null) 
                     {
-                        if (transformedTFrom.Equals(tTo))
-                        {
-                            tmpResult[0]++;
-                            tmpResult[2] = transformedTFrom.GetDistanceTo(tTo);
-                            equalsAdded = true;
-                            break;
-                        }
+                        tmpResult[0]++;
+                        tmpTrianglesTo.Remove(tFromEquals);
+                        break;
                     }
 
-                    if (!equalsAdded)
+                    Triangle tFromNear = FindNear(transformedTFrom, distance, tmpTrianglesTo);
+                    if (tFromNear != null)
                     {
-                        foreach (Triangle tTo in TrianglesTo)
-                        {
-                            if (transformedTFrom.Equals(tTo, distance))
-                            {
-                                tmpResult[1]++;
-                                tmpResult[2] = transformedTFrom.GetDistanceTo(tTo);
-                                break;
-                            }
-                        }
+                        tmpResult[1]++;
+                        tmpResult[2] += transformedTFrom.GetDistanceTo(tFromNear);
+
+                        tmpTrianglesTo.Remove(tFromNear);
+                        break;
+                    }
+                    tmpResult[2] += Point.GetMassCenter(tFrom.A, tFrom.B, tFrom.C).GetDistance(tFrom.A);
+                }
+                
+                if (tmpResult[0] + tmpResult[1] > result[0] + result[1])
+                {
+                    result[0] = tmpResult[0];
+                    result[1] = tmpResult[1];
+                    resultBuilder = builder;
+                }
+            }
+            return result;
+        }
+
+
+        private Triangle FindEquals(Triangle triangle, List<Triangle> list) {
+            Triangle result = null;
+
+            foreach (Triangle t in list) 
+            {
+                if (t.Equals(triangle))
+                    return t;
+            }
+
+            return result;
+        }
+
+        private Triangle FindNear(Triangle triangle, double distance, List<Triangle> list) {
+            Triangle result = null;
+            double nearDistance = -1;
+            foreach (Triangle t in list)
+            {
+                if (t.Equals(triangle, distance))
+                { 
+                    double tmpNearDistance = t.GetDistanceTo(triangle);
+                    if (tmpNearDistance < nearDistance || nearDistance == -1)
+                    {
+                        result = t;
+                        nearDistance = tmpNearDistance;
                     }
                 }
             }
-
             return result;
         }
     }

@@ -32,5 +32,47 @@ namespace TriangulationWithAfineTransformation
             graphic = this.CreateGraphics();
             graphic.Clear(this.BackColor);
         }
+
+        
+        private void LoadImage(PictureBox pictureBox) 
+        {
+            using (OpenFileDialog dlg = new OpenFileDialog())
+            {
+                dlg.Title = "Open Image";
+                dlg.Filter = "bmp files (*.bmp)|*.bmp";
+
+                if (dlg.ShowDialog() == DialogResult.OK)
+                {
+                    // Create a new Bitmap object from the picture file on disk,
+                    // and assign that to the PictureBox.Image property
+                    pictureBox.Image = new Bitmap(dlg.FileName);
+                }
+            }
+        }
+
+        private void ImageToOnClick(object sender, EventArgs e)
+        {
+            LoadImage(ImageTo);
+        }
+
+        private void ImageFromOnClick(object sender, EventArgs e)
+        {
+            LoadImage(ImageFrom);
+        }
+
+        private void GetMinutias (){
+            var image = ImageFrom.Image;
+            TriangulationWithAfineTransformation.Classes.ImageHelper.LoadImage<int>((Bitmap)ImageFrom.Image);
+            var bytes = TriangulationWithAfineTransformation.Classes.ImageHelper.LoadImage<int>((Bitmap)ImageFrom.Image);
+            TriangulationWithAfineTransformation.Classes.PixelwiseOrientationField field = new TriangulationWithAfineTransformation.Classes.PixelwiseOrientationField(bytes, 16);
+
+            List<TriangulationWithAfineTransformation.Classes.Minutia> minutias = TriangulationWithAfineTransformation.Classes.MinutiaDetector.GetMinutias(bytes, field);
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            GetMinutias();
+        }
     }
 }

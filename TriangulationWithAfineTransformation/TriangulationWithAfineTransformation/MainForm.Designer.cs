@@ -28,23 +28,71 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.ImageFrom = new System.Windows.Forms.PictureBox();
+            this.ImageTo = new System.Windows.Forms.PictureBox();
+            this.button1 = new System.Windows.Forms.Button();
+            ((System.ComponentModel.ISupportInitialize)(this.ImageFrom)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ImageTo)).BeginInit();
             this.SuspendLayout();
+            // 
+            // ImageFrom
+            // 
+            this.ImageFrom.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.ImageFrom.Location = new System.Drawing.Point(12, 12);
+            this.ImageFrom.Name = "ImageFrom";
+            this.ImageFrom.Size = new System.Drawing.Size(229, 274);
+            this.ImageFrom.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.ImageFrom.TabIndex = 0;
+            this.ImageFrom.TabStop = false;
+            this.ImageFrom.Click += new System.EventHandler(this.ImageFromOnClick);
+            // 
+            // ImageTo
+            // 
+            this.ImageTo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.ImageTo.Location = new System.Drawing.Point(394, 12);
+            this.ImageTo.Name = "ImageTo";
+            this.ImageTo.Size = new System.Drawing.Size(229, 274);
+            this.ImageTo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.ImageTo.TabIndex = 1;
+            this.ImageTo.TabStop = false;
+            this.ImageTo.Click += new System.EventHandler(this.ImageToOnClick);
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(282, 12);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 2;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoSize = true;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(601, 426);
+            this.ClientSize = new System.Drawing.Size(635, 300);
+            this.Controls.Add(this.button1);
+            this.Controls.Add(this.ImageTo);
+            this.Controls.Add(this.ImageFrom);
             this.Name = "MainForm";
             this.Text = "Triangulation with afine transformation";
             this.ResizeEnd += new System.EventHandler(this.OnMainFormResize);
             this.Resize += new System.EventHandler(this.OnMainFormResize);
+            ((System.ComponentModel.ISupportInitialize)(this.ImageFrom)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ImageTo)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
+
+        private System.Windows.Forms.PictureBox ImageFrom;
+        private System.Windows.Forms.PictureBox ImageTo;
+        private System.Windows.Forms.Button button1;
     }
 }
 
