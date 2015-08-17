@@ -30,7 +30,7 @@
         {
             this.ImageFrom = new System.Windows.Forms.PictureBox();
             this.ImageTo = new System.Windows.Forms.PictureBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.Match = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.ImageFrom)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ImageTo)).BeginInit();
             this.SuspendLayout();
@@ -57,15 +57,15 @@
             this.ImageTo.TabStop = false;
             this.ImageTo.Click += new System.EventHandler(this.ImageToOnClick);
             // 
-            // button1
+            // Match
             // 
-            this.button1.Location = new System.Drawing.Point(282, 12);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 2;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.Match.Location = new System.Drawing.Point(282, 12);
+            this.Match.Name = "Match";
+            this.Match.Size = new System.Drawing.Size(75, 23);
+            this.Match.TabIndex = 2;
+            this.Match.Text = "Match";
+            this.Match.UseVisualStyleBackColor = true;
+            this.Match.Click += new System.EventHandler(this.MatchButtonClick);
             // 
             // MainForm
             // 
@@ -74,7 +74,7 @@
             this.AutoSize = true;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(635, 300);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.Match);
             this.Controls.Add(this.ImageTo);
             this.Controls.Add(this.ImageFrom);
             this.Name = "MainForm";
@@ -92,7 +92,7 @@
 
         private System.Windows.Forms.PictureBox ImageFrom;
         private System.Windows.Forms.PictureBox ImageTo;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button Match;
     }
 }
 

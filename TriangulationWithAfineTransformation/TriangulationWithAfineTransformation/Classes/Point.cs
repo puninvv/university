@@ -4,7 +4,7 @@ using System.Drawing;
 
 namespace TriangulationWithAfineTransformation.Classes
 {
-    public class Point
+    public class Point: IComparable<Point>
     {
         public double X
         {
@@ -95,10 +95,18 @@ namespace TriangulationWithAfineTransformation.Classes
             return new Point(x, y);
         }
 
-
-        public void Paint(Graphics g, Pen p, int formHeight)
+        public int CompareTo(Point other)
         {
-            g.DrawEllipse(p, (int)X - 1, formHeight - (int)X + 1, 3, 3);
+            if (Math.Abs(X) + Math.Abs(Y) > Math.Abs(other.X) + Math.Abs(other.Y))
+                return 1;
+            if (Math.Abs(X) + Math.Abs(Y) < Math.Abs(other.X) + Math.Abs(other.Y))
+                return -1;
+            return 0;
+        }
+        
+        public void Paint(Graphics g, Pen p, int height)
+        {
+            g.DrawEllipse(p, (int)X - 1, height - (int)Y + 1, 3, 3);
         }
     }
 }

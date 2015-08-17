@@ -17,82 +17,72 @@ namespace TriangulationWithAfineTransformation.Classes
             TrianglesTo = trianglesTo;
         }
 
-        private List<OptimumConversionBuilder> CreatListWithDistances()
+        private OptimumConversionBuilder CreateOptimumBuilder(Triangle from, List<Triangle> list) 
         {
-            List<OptimumConversionBuilder> result = null;
+            OptimumConversionBuilder ocb = null;
+
+            foreach (Triangle t in list)
+            {
+                OptimumConversionBuilder ocbTmp = new OptimumConversionBuilder(from, t);
+                if (ocb == null || ocbTmp.Distance < ocb.Distance)
+                    ocb = ocbTmp;
+            }
+
+            return ocb;
+        }
+
+        public double[] Match(double distance, int threshhold) 
+        {
+            double[] result = null;
 
             foreach (Triangle tFrom in TrianglesFrom)
             {
-                OptimumConversionBuilder tmpToAdd = null;
-                foreach (Triangle tTo in TrianglesTo)
-                {
-                    OptimumConversionBuilder tmpTo = new OptimumConversionBuilder(tFrom, tTo);
-                    if (tmpToAdd == null || tmpTo.Distance < tmpToAdd.Distance)
-                        tmpToAdd = tmpTo;
-                }
-                result.Add(tmpToAdd);
-            }
-
-            result.Sort();
-
-            return result;
-        }
-
-        private double[] Match(double distance)
-        {
-            double[] result = new double[3];            //result[0] - полностью совпали
-                                                        //result[1] - почти совпали (в пределах погрешности)
-                                                        //result[2] - сумма расстояний
-
-            List<OptimumConversionBuilder> builders = new List<OptimumConversionBuilder>();
-            OptimumConversionBuilder resultBuilder = null;
-            /*
-             * Для каждого билдера: 
-             * 1) Преобразуем каждый треугольник из tForm в
-             * 2) Находим для него совпадение или примерное совпадение
-             * 3) Если совпадение не нашлось, ищем примерное совпадение 
-             *      (каждая точка удалена не более чем на distance)
-             * 4) Удаляем найденый треугольник из списка
-             */
-
-            foreach (OptimumConversionBuilder builder in builders)
-            {
                 double[] tmpResult = new double[3];
-                List<Triangle> tmpTrianglesTo = new List<Triangle>(TrianglesTo);
 
-                foreach (Triangle tFrom in TrianglesFrom)
-                {
-                    Triangle transformedTFrom = tFrom.GetTransformation(builder.Dx, builder.Dy, builder.Phi);
-                    Triangle tFromEquals = FindEquals(transformedTFrom, tmpTrianglesTo);
-                    if (tFromEquals != null) 
-                    {
-                        tmpResult[0]++;
-                        tmpTrianglesTo.Remove(tFromEquals);
-                        break;
-                    }
+                List<Triangle> copyFrom = new List<Triangle>(TrianglesFrom);
+                List<Triangle> copyTo = new List<Triangle>(TrianglesTo);
 
-                    Triangle tFromNear = FindNear(transformedTFrom, distance, tmpTrianglesTo);
-                    if (tFromNear != null)
-                    {
-                        tmpResult[1]++;
-                        tmpResult[2] += transformedTFrom.GetDistanceTo(tFromNear);
-
-                        tmpTrianglesTo.Remove(tFromNear);
-                        break;
-                    }
-                    tmpResult[2] += Point.GetMassCenter(tFrom.A, tFrom.B, tFrom.C).GetDistance(tFrom.A);
-                }
+                OptimumConversionBuilder ocb = CreateOptimumBuilder(tFrom, copyTo);
                 
-                if (tmpResult[0] + tmpResult[1] > result[0] + result[1])
+                if (ocb.Distance > distance)
+                    continue;
+
+                List<Triangle> UpdatedTriangles = new List<Triangle>();
+                foreach (Triangle t in copyFrom)
+                    UpdatedTriangles.Add(tFrom.GetTransformation(ocb.Dx, ocb.Dy, ocb.Phi));
+
+                foreach (Triangle t in UpdatedTriangles) 
+                {
+                    Triangle equals = FindEquals(t, copyTo);
+                    if (equals != null)
+                        tmpResult[0]++;
+                    else
+                    {
+                        Triangle near = FindNear(t, distance, copyTo);
+                        if (near != null)
+                            tmpResult[1]++;
+                    }
+                }
+
+                if (result == null)
+                {
+                    result = new double[3];
+                    result[0] = tmpResult[0];
+                    result[1] = tmpResult[1];
+                }
+
+                if (result[0] + result[1] < tmpResult[0] + tmpResult[1])
                 {
                     result[0] = tmpResult[0];
                     result[1] = tmpResult[1];
-                    resultBuilder = builder;
                 }
+
+                if (100* (result[0] + result[1])/TrianglesFrom.Count > threshhold)
+                    break;
             }
+
             return result;
         }
-
 
         private Triangle FindEquals(Triangle triangle, List<Triangle> list) {
             Triangle result = null;

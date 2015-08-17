@@ -65,7 +65,7 @@ namespace TriangulationWithAfineTransformation.Classes
             result = src;
             transformation = new double[3];
 
-            int n = 180;
+            int n = 90;
             double nearestDistance = src.GetDistanceTo(dest);
             for (int i = 0; i < n; i++)
             {

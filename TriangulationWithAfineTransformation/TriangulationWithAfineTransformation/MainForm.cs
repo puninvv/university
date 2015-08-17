@@ -7,6 +7,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using CUDAFingerprinting.Common;
+using CUDAFingerprinting.FeatureExtraction;
+using CUDAFingerprinting.ImageProcessing;
+using CUDAFingerprinting.TemplateMatching;
 
 namespace TriangulationWithAfineTransformation
 {
@@ -60,19 +64,105 @@ namespace TriangulationWithAfineTransformation
             LoadImage(ImageFrom);
         }
 
-        private void GetMinutias (){
-            var image = ImageFrom.Image;
-            TriangulationWithAfineTransformation.Classes.ImageHelper.LoadImage<int>((Bitmap)ImageFrom.Image);
-            var bytes = TriangulationWithAfineTransformation.Classes.ImageHelper.LoadImage<int>((Bitmap)ImageFrom.Image);
-            TriangulationWithAfineTransformation.Classes.PixelwiseOrientationField field = new TriangulationWithAfineTransformation.Classes.PixelwiseOrientationField(bytes, 16);
+        private List<Minutia> GetMinutiasFrom(PictureBox box){
+            var image = box.Image;
 
-            List<TriangulationWithAfineTransformation.Classes.Minutia> minutias = TriangulationWithAfineTransformation.Classes.MinutiaDetector.GetMinutias(bytes, field);
+            Bitmap bmp = (Bitmap) box.Image;
 
+            var bytes = ImageHelper.LoadImage<int>((Bitmap)box.Image);
+            CUDAFingerprinting.Common.OrientationField.PixelwiseOrientationField field = new CUDAFingerprinting.Common.OrientationField.PixelwiseOrientationField(bytes, 16);
+
+            return CUDAFingerprinting.FeatureExtraction.Minutiae.MinutiaDetector.GetMinutias(bytes, field);
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        public Bitmap Binarize(Bitmap src, int threshold)
         {
-            GetMinutias();
+            Bitmap bmp = new Bitmap(src.Width, src.Height);
+            for (int i = 0; i < bmp.Width; i++)
+            {
+                for (int j = 0; j < bmp.Height; j++)
+                {
+                    bmp.SetPixel(i, j, src.GetPixel(i, j).B < threshold ? Color.Black : Color.White);
+                }
+            }
+            return bmp;
+        }
+
+        private void MatchButtonClick(object sender, EventArgs e)
+        {
+           
+
+            List<Minutia> minutiasFrom = GetMinutiasFrom(ImageFrom);
+            
+            MessageBox.Show("Found " + minutiasFrom.Count + " minutias in left picture.");
+
+            List<Classes.Point> pointsFrom = new List<Classes.Point>();
+            Graphics ImageFromGraphics = ImageFrom.CreateGraphics();
+            foreach (Minutia m in minutiasFrom)
+            {
+                Classes.Point p = new Classes.Point(m.X, ImageFrom.Height - m.Y+1);
+                p.Paint(ImageFromGraphics, defPointPen, ImageFrom.Height);
+                pointsFrom.Add(p);
+            }
+
+            if (minutiasFrom.Count > 500)
+            {
+                string messageBoxText = "Do you really want to continue?\n You'll just waste your time...";
+                string caption = "Too many minutuias";
+                MessageBoxButtons mb = MessageBoxButtons.OKCancel;
+                if (MessageBox.Show(messageBoxText, caption, mb) == System.Windows.Forms.DialogResult.Cancel)
+                    return;
+            }
+
+            Classes.TriangulationBuilder tb = new Classes.TriangulationBuilder(pointsFrom);
+            MessageBox.Show("Triangulation built! It has: "+tb.triangles.Count+" triangles.");
+
+            List<Classes.Triangle> triangulationFrom = tb.triangles;
+            foreach (Classes.Triangle t in tb.triangles) {
+                t.Paint(ImageFromGraphics, defLinePen, defPointPen, ImageFrom.Height);
+            }
+            
+            List<Minutia> minutiasTo = GetMinutiasFrom(ImageTo);
+
+            MessageBox.Show("Found " + minutiasTo.Count + " minutias in right picture");
+
+            List<Classes.Point> pointsTo = new List<Classes.Point>();
+
+
+            Graphics ImageToGraphics = ImageTo.CreateGraphics();
+            foreach (Minutia m in minutiasTo)
+            {
+                Classes.Point p = new Classes.Point(m.X, ImageTo.Height - m.Y+1);
+                p.Paint(ImageToGraphics, defPointPen, ImageTo.Height);
+                pointsTo.Add(p);
+            }
+
+            if (minutiasTo.Count > 500)
+            {
+                string messageBoxText = "Do you really want to continue?\n You'll just waste your time...";
+                string caption = "Too many minutuias";
+                MessageBoxButtons mb = MessageBoxButtons.OKCancel;
+                if (MessageBox.Show(messageBoxText, caption, mb) == System.Windows.Forms.DialogResult.Cancel)
+                    return;
+            }
+
+            Classes.TriangulationBuilder tbTo;
+            if (minutiasTo.Count < 500)
+                tbTo = new Classes.TriangulationBuilder(pointsTo);
+            else
+                tbTo = new Classes.TriangulationBuilder(pointsTo, ImageToGraphics, defLinePen, defPointPen, new Pen(Color.Gold, 1), ImageTo.Height, 0);
+            
+            MessageBox.Show("Triangulation built! It has: " + tbTo.triangles.Count + " triangles.");
+
+            List<Classes.Triangle> triangulationTo = tbTo.triangles;
+            foreach (Classes.Triangle t in tbTo.triangles)
+            {
+                t.Paint(ImageToGraphics, defLinePen, defPointPen, ImageFrom.Height);
+            }
+
+            Classes.TriangulationsMatcher tm = new Classes.TriangulationsMatcher(triangulationFrom, triangulationTo);
+            double[] result = tm.Match(0.001,90);
+            MessageBox.Show("Equals: " + result[0] + ", very close:" + result[1]);
         }
     }
 }
