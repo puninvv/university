@@ -312,8 +312,7 @@ __device__ TransformationWithDistance findOptimumTransformationDEVICE(Triangle* 
 
 __global__ void fOTKernel(Triangle* ABC_, int ABC_size, Triangle* ABC, int ABCsize, TransformationWithDistance* result, int maxIterations, float e, int parts)
 {
-	extern __shared__ Triangle cache[];
-		
+	//extern __shared__ Triangle cache[];
 	int row = defaultRow();
 	int column = defaultColumn();
 
@@ -357,7 +356,7 @@ cudaError_t findOptimumTransformationWithCuda(Triangle* ABC_, int ABC_size, Tria
 	dim3 blocks(ceilMod(ABC_size, defaultThreadCount), ceilMod(ABCsize,defaultThreadCount));
 
 	//void findOptimumTransformationKernel(Triangle* ABC_, int ABC_size, Triangle* ABC, int ABCsize, TransformationWithDistance* result, int maxIterations, float e, int parts)
-	fOTKernel <<< blocks, threads, 2*sizeof(Triangle)*defaultThreadCount >>>(devABC_, ABC_size, devABC, ABCsize, devResult, maxIterations, e, parts);
+	fOTKernel <<< blocks, threads >>>(devABC_, ABC_size, devABC, ABCsize, devResult, maxIterations, e, parts);
 
 	cudaStatus = cudaGetLastError();
 	if (cudaStatus != cudaSuccess)
@@ -423,6 +422,8 @@ int main()
 
 	TransformationWithDistance* result = (TransformationWithDistance*)malloc(ABC_size * ABCsize * sizeof(TransformationWithDistance));
 	cudaError_t cudaStatus = findOptimumTransformationWithCuda(ABC_, ABC_size, ABC, ABCsize, result, 10, 0.00001f, 3);
+
+	TransformationWithDistance dest = findOptimumTransformationHOST(&ABC_[56], &ABC[4], 0.00001f, 10, 3);
 
 	if (cudaStatus != cudaSuccess)
 		goto End;
