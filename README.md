@@ -1,9 +1,31 @@
-UnionOfPolygons - <b>C#</b>
+<b>C#</b>:
 <br>
-NumericalAnalyzis - <b>Java</b>
+<br><b>DelaunayTriangulationSample</b>:
+<br>Программа строит из заданных точек триангуляцию Делоне. Двухпроходной алгоритм. Первый проход - веерный.
 <br>
-SkyMap - <b>Java</b>
+<br><b>OptimumConversionOfTriangleSample</b>:
+<br>Построение афинного преобразования (сдвиг+поворот, без масштабирования), наиболее сближающего треугольники
 <br>
-Delaunay triangulation - <b>C#<b>
+<br><b>DelaunayTrianglelationWithAffineTransformation</b>:
+<br>Попытка распозать отпечатки пальцев
 <br>
-Game with words - <b>C#<b>
+<br><b>GameWithWords</b>:
+<br>Клиент-серверная игра в слова. Протокол - TCP
+<br>
+<br><b>UnionOfPolygons</b>:
+<br>Построение объединения многоугольников без самопересечения (обход границ взят за основу)
+<br>
+<br>
+<b>Java</b>:
+<br>
+<br><b>NumericalAnalysis</b>:
+<br>Реализовано решение слау: разложением на PLU, QR, итеративно; Решение нелинейных уравнений и систем: метод Ньютона. Численное интегрирование.
+<br>
+<br><b>SkyMap</b>:
+<br>Построение преобразования, наиболее тесно соединяющего два набора точек на плоскости
+<br>
+<br>
+<b>С</b>:
+<br>
+<br><b>TriangleMatcherWithCUDA</b>:
+<br>Построение матрицы преобразований для двух наборов треугольников, с применением CUDA 
