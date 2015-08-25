@@ -312,17 +312,21 @@ __device__ TransformationWithDistance findOptimumTransformationDEVICE(Triangle* 
 
 __global__ void fOTKernel(Triangle* ABC_, int ABC_size, Triangle* ABC, int ABCsize, TransformationWithDistance* result, int maxIterations, float e, int parts)
 {
-	int j = defaultRow();
-	int i = defaultColumn();
+	extern __shared__ Triangle cache[];
+		
+	int row = defaultRow();
+	int column = defaultColumn();
 
-	if (i < ABC_size && j < ABCsize)
+	if (row < ABC_size && column < ABCsize)
 	{
-		int pos = i * ABCsize + j;
-		result[pos] = findOptimumTransformationDEVICE(&ABC_[i], &ABC[j],e,maxIterations, parts);
+		Triangle abc_ = ABC_[row];
+		Triangle abc = ABC[column];
+		result[row * ABCsize + column] = findOptimumTransformationDEVICE(&abc_, &abc, e, maxIterations, parts);
 	}
 }
 cudaError_t findOptimumTransformationWithCuda(Triangle* ABC_, int ABC_size, Triangle* ABC, int ABCsize, TransformationWithDistance* result, int maxIterations, float e, int parts)
 {
+	
 	Triangle* devABC_;
 	Triangle* devABC;
 	TransformationWithDistance* devResult;
@@ -350,10 +354,10 @@ cudaError_t findOptimumTransformationWithCuda(Triangle* ABC_, int ABC_size, Tria
 		goto Error;
 
 	dim3 threads(defaultThreadCount, defaultThreadCount);
-	dim3 blocks(ceilMod(ABCsize, defaultThreadCount), ceilMod(ABC_size, defaultThreadCount));
+	dim3 blocks(ceilMod(ABC_size, defaultThreadCount), ceilMod(ABCsize,defaultThreadCount));
 
 	//void findOptimumTransformationKernel(Triangle* ABC_, int ABC_size, Triangle* ABC, int ABCsize, TransformationWithDistance* result, int maxIterations, float e, int parts)
-	fOTKernel <<< blocks, threads >>>(devABC_, ABC_size, devABC, ABCsize, devResult, maxIterations, e, parts);
+	fOTKernel <<< blocks, threads, 2*sizeof(Triangle)*defaultThreadCount >>>(devABC_, ABC_size, devABC, ABCsize, devResult, maxIterations, e, parts);
 
 	cudaStatus = cudaGetLastError();
 	if (cudaStatus != cudaSuccess)
@@ -375,13 +379,12 @@ Error:
 	return cudaStatus;
 }
 
-
 int main()
 {
 	int max_rand = 100;
 
 	int ABCsize = 100;
-	int ABC_size = 100;
+	int ABC_size = 200;
 	Triangle* ABC = (Triangle*)malloc(ABCsize * sizeof(Triangle));
 	Triangle* ABC_ = (Triangle*)malloc(ABC_size * sizeof(Triangle));
 
@@ -419,7 +422,7 @@ int main()
 
 
 	TransformationWithDistance* result = (TransformationWithDistance*)malloc(ABC_size * ABCsize * sizeof(TransformationWithDistance));
-	cudaError_t cudaStatus = findOptimumTransformationWithCuda(ABC_, ABC_size, ABC, ABCsize, result, 0, 1, 360);
+	cudaError_t cudaStatus = findOptimumTransformationWithCuda(ABC_, ABC_size, ABC, ABCsize, result, 10, 0.00001f, 3);
 
 	if (cudaStatus != cudaSuccess)
 		goto End;
