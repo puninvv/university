@@ -10,6 +10,8 @@
 #define defaultColumn() blockIdx.x*blockDim.x + threadIdx.x
 #define ceilMod(x ,y) (x + y - 1)/(y)
 
+#define checkStatus() if (cudaStatus != cudaSuccess) goto Error
+
 #define PI 3.141592f
 const int defaultThreadCount = 16;
 
@@ -584,6 +586,8 @@ Error:
 }
 
 //non-parellel for version
+
+//non-parellel for version
 __global__ void fOTKernel(Triangle* ABC_, int ABC_size, Triangle* ABC, int ABCsize, TransformationWithDistance* result, int maxIterations, float e, int parts)
 {
 	//extern __shared__ Triangle cache[];
@@ -607,41 +611,41 @@ cudaError_t findOptimumTransformationNonParallelForWithCuda(Triangle* ABC_, int 
 
 	cudaStatus = cudaMalloc((void**)& devABC_, ABC_size * sizeof(Triangle));
 	if (cudaStatus != cudaSuccess)
-	goto Error;
+		goto Error;
 
 	cudaStatus = cudaMalloc((void**)& devABC, ABCsize * sizeof(Triangle));
 	if (cudaStatus != cudaSuccess)
-	goto Error;
+		goto Error;
 
 	cudaStatus = cudaMalloc((void**)& devResult, ABC_size * ABCsize * sizeof(TransformationWithDistance));
 	if (cudaStatus != cudaSuccess)
-	goto Error;
+		goto Error;
 
 	cudaStatus = cudaMemcpy(devABC_, ABC_, ABC_size * sizeof(Triangle), cudaMemcpyHostToDevice);
 	if (cudaStatus != cudaSuccess)
-	goto Error;
+		goto Error;
 
 	cudaStatus = cudaMemcpy(devABC, ABC, ABCsize * sizeof(Triangle), cudaMemcpyHostToDevice);
 	if (cudaStatus != cudaSuccess)
-	goto Error;
+		goto Error;
 
 	dim3 threads(defaultThreadCount, defaultThreadCount);
-	dim3 blocks(ceilMod(ABC_size, defaultThreadCount), ceilMod(ABCsize,defaultThreadCount));
+	dim3 blocks(ceilMod(ABC_size, defaultThreadCount), ceilMod(ABCsize, defaultThreadCount));
 
 	//void findOptimumTransformationKernel(Triangle* ABC_, int ABC_size, Triangle* ABC, int ABCsize, TransformationWithDistance* result, int maxIterations, float e, int parts)
 	fOTKernel <<< blocks, threads >>>(devABC_, ABC_size, devABC, ABCsize, devResult, maxIterations, e, parts);
 
 	cudaStatus = cudaGetLastError();
 	if (cudaStatus != cudaSuccess)
-	goto Error;
+		goto Error;
 
 	cudaStatus = cudaDeviceSynchronize();
 	if (cudaStatus != cudaSuccess)
-	goto Error;
+		goto Error;
 
 	cudaStatus = cudaMemcpy(result, devResult, ABC_size * ABCsize * sizeof(TransformationWithDistance), cudaMemcpyDeviceToHost);
 	if (cudaStatus != cudaSuccess)
-	goto Error;
+		goto Error;
 
 Error:
 	cudaFree(devABC_);
@@ -650,6 +654,62 @@ Error:
 
 	return cudaStatus;
 }
+
+
+//transformation + distance version
+__global__ void findOptimumTransformationPlusDistanceVersionKernel(Triangle* ABC_, int ABC_size, Triangle* ABC, int ABCsize, Transformation* result, float* resultDistance, int maxIterations, float e, int parts)
+{
+	//extern __shared__ Triangle cache[];
+	int row = defaultRow();
+	int column = defaultColumn();
+
+	if (row < ABC_size && column < ABCsize)
+	{
+		Triangle abc_ = ABC_[row];
+		Triangle abc = ABC[column];
+		TransformationWithDistance toResult = findOptimumTransformationDEVICE(&abc_, &abc, e, maxIterations, parts);
+		result[row * ABCsize + column] = toResult.transformation;
+		resultDistance[row * ABCsize + column] = toResult.distance;
+	}
+}
+cudaError_t findOptimumTransformationPlusDistanceVersionCUDA(Triangle* ABC_, int ABC_size, Triangle* ABC, int ABCsize, Transformation* result, float* resultDistance, int maxIterations, float e, int parts)
+{
+	Triangle* devABC_;
+	Triangle* devABC;
+	Transformation* devResult;
+	float* devDistance;
+
+	cudaError_t cudaStatus;
+
+	cudaStatus = cudaMalloc((void**)& devABC_, ABC_size * sizeof(Triangle)); checkStatus();
+	cudaStatus = cudaMalloc((void**)& devABC, ABCsize * sizeof(Triangle)); checkStatus();
+	cudaStatus = cudaMalloc((void**)& devResult, ABC_size * ABCsize * sizeof(Transformation)); checkStatus();
+	cudaStatus = cudaMalloc((void**)& devDistance, ABC_size * ABCsize * sizeof(float)); checkStatus();
+
+	cudaStatus = cudaMemcpy(devABC_, ABC_, ABC_size * sizeof(Triangle), cudaMemcpyHostToDevice); checkStatus();
+	cudaStatus = cudaMemcpy(devABC, ABC, ABCsize * sizeof(Triangle), cudaMemcpyHostToDevice); checkStatus();
+
+	dim3 threads(defaultThreadCount, defaultThreadCount);
+	dim3 blocks(ceilMod(ABC_size, defaultThreadCount), ceilMod(ABCsize, defaultThreadCount));
+
+	//void findOptimumTransformationKernel(Triangle* ABC_, int ABC_size, Triangle* ABC, int ABCsize, TransformationWithDistance* result, int maxIterations, float e, int parts)
+	findOptimumTransformationPlusDistanceVersionKernel << < blocks, threads >> >(devABC_, ABC_size, devABC, ABCsize, devResult, devDistance, maxIterations, e, parts);
+
+	cudaStatus = cudaGetLastError(); checkStatus();
+	cudaStatus = cudaDeviceSynchronize(); checkStatus();
+
+	cudaStatus = cudaMemcpy(result, devResult, ABC_size * ABCsize * sizeof(Transformation), cudaMemcpyDeviceToHost); checkStatus();
+	cudaStatus = cudaMemcpy(resultDistance, devDistance, ABC_size * ABCsize * sizeof(float), cudaMemcpyDeviceToHost); checkStatus();
+
+Error:
+	cudaFree(devABC_);
+	cudaFree(devABC);
+	cudaFree(devResult);
+	cudaFree(devDistance);
+
+	return cudaStatus;
+}
+
 
 int main()
 {
@@ -695,7 +755,21 @@ int main()
 
 	TransformationWithDistance* result = (TransformationWithDistance*)malloc(ABC_size * ABCsize * sizeof(TransformationWithDistance));
 	
-	cudaError_t cudaStatus = findOptimumTransformationParallelForWithCuda(ABC_, ABC_size, ABC, ABCsize, result, 10, 0.00001f, 5);
+	Transformation* resultTransformation = (Transformation*)malloc(ABC_size * ABCsize * sizeof(Transformation));
+	float* resultDistance = (float*)malloc(ABC_size * ABCsize * sizeof(float));
+	cudaError_t cudaStatus = findOptimumTransformationPlusDistanceVersionCUDA(ABC_, ABC_size, ABC, ABCsize, resultTransformation, resultDistance, 10, 0.00001f, 5);
+	
+	Transformation zeroResult = resultTransformation[56 * 200 + 4];
+	float zeroDistance = resultDistance[56 * 200 + 4];
+
+	if (cudaStatus != cudaSuccess)
+		goto End;
+
+	cudaStatus = cudaDeviceReset();
+	if (cudaStatus != cudaSuccess)
+		goto End;
+
+	cudaStatus = findOptimumTransformationParallelForWithCuda(ABC_, ABC_size, ABC, ABCsize, result, 10, 0.00001f, 5);
 	TransformationWithDistance firstResult = result[56 * 200 + 4];
 	
 	if (cudaStatus != cudaSuccess)
