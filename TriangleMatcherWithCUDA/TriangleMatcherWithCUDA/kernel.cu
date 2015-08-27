@@ -165,10 +165,17 @@ __host__ TransformationWithDistance findOptimumTransformationHOST(Triangle* ABC_
 
 
 //точки
+
+/*
+¬ычисление рассто€ни€ между двум€ точками, без извлечени€ корн€.
+*/
 __device__ float countDistanceBetweenPointsDEVICE(Point first, Point second)
 {
 	return (first.x - second.x)*(first.x - second.x) + (first.y - second.y)*(first.y - second.y);
 }
+/*
+¬ычисление образа точки, сдвинутой относительно исходной на dx, dy
+*/
 __device__ Point countMovedPointDEVICE(Point p, float dx, float dy)
 {
 	Point result;
@@ -176,6 +183,10 @@ __device__ Point countMovedPointDEVICE(Point p, float dx, float dy)
 	result.y = p.y + dy;
 	return result;
 }
+/*
+¬ычисление образа точки, после поворота относительно начала координат на угол phi, 
+нужно передать его синус и косинус
+*/
 __device__ Point countRotatedPointDEVICE(Point p, float cos_phi, float sin_phi)
 {
 	Point result;
@@ -184,7 +195,12 @@ __device__ Point countRotatedPointDEVICE(Point p, float cos_phi, float sin_phi)
 	return result;
 }
 
+
 //треугольники
+
+/*
+¬ычисление суммы рассто€ний между соответсвующими вершинами двух треугольников
+*/
 __device__ float countDistanceBetweenTrianglesDEVICE(Triangle* first, Triangle* second)
 {
 	return
@@ -192,6 +208,9 @@ __device__ float countDistanceBetweenTrianglesDEVICE(Triangle* first, Triangle* 
 		countDistanceBetweenPointsDEVICE(first->B, second->B) +
 		countDistanceBetweenPointsDEVICE(first->C, second->C);
 }
+/*
+¬ычисление центра масс
+*/
 __device__ Point countTriangleMassCenterDEVICE(Triangle* ABC)
 {
 	Point result;
@@ -199,6 +218,9 @@ __device__ Point countTriangleMassCenterDEVICE(Triangle* ABC)
 	result.y = (ABC->A.y + ABC->B.y + ABC->C.y) / 3;
 	return result;
 }
+/*
+¬ычисление образа треугольника, передвинутого на dx, dy
+*/
 __device__ Triangle countMovedTriangleDEVICE(Triangle* ABC, float dx, float dy)
 {
 	Triangle result;
@@ -207,6 +229,10 @@ __device__ Triangle countMovedTriangleDEVICE(Triangle* ABC, float dx, float dy)
 	result.C = countMovedPointDEVICE(ABC->C, dx, dy);
 	return result;
 }
+/*
+¬ычисление образа треугольника, повернутого относительно начала координат на угол phi
+необходимо передать его синус и косинус
+*/
 __device__ Triangle countRotatedTriangleDEVICE(Triangle* ABC, float cos_phi, float sin_phi)
 {
 	Triangle result;
@@ -215,6 +241,11 @@ __device__ Triangle countRotatedTriangleDEVICE(Triangle* ABC, float cos_phi, flo
 	result.C = countRotatedPointDEVICE(ABC->C, cos_phi, sin_phi);
 	return result;
 }
+/*
+	1)сдвигаем треугольник в начало координат
+	2)поворачиваем
+	3)передвигаем на dx, dy
+*/
 __device__ Triangle countTransformedTriangleDEVICE(Triangle* ABC, Transformation t)
 {
 	Point ABCmc = countTriangleMassCenterDEVICE(ABC);
@@ -223,7 +254,14 @@ __device__ Triangle countTransformedTriangleDEVICE(Triangle* ABC, Transformation
 	return countMovedTriangleDEVICE(&ABC_moved_rotated, t.dx, t.dy);
 }
 
+
 //преобразовани€
+
+/*F = (Ax - A_x cos_phi + A_y sin_phi)^2 + (Ay - A_x sin_phi - A_y cos_phi)^2 + 
+(Bx - B_x cos_phi + B_y sin_phi)^2 + (By - B_x sin_phi - B_y cos_phi)^2 +
+(Cx - C_x cos_phi + C_y sin_phi)^2 + (Cy - C_x sin_phi - C_y cos_phi)^2;  - еЄ нужно минимализировать
+ƒл€ этого: вычисл€ем дифференциал, второй дифференциал а после - находим нули производной с:
+phi0 - начальное приближение, maxIterations - максимальным числом итераций и допустимой погрешностью e*/
 __device__ float countOptimumlPhiDEVICE(float phi0, float sProd, float vProd, int maxIterations, float e)
 {
 	float resultPhi = phi0;
@@ -246,6 +284,9 @@ __device__ float countOptimumlPhiDEVICE(float phi0, float sProd, float vProd, in
 
 	return resultPhi;
 }
+/*
+	Ќаходим оптимальное преобразование ABC_ -> ABC, начальные приближени€ - (360/parts - 180) * i
+*/
 __device__ TransformationWithDistance findOptimumTransformationABCDEVICE(Triangle* ABC_, Triangle* ABC, float e, int maxIterations, int parts)
 {
 	Point ABCmc = countTriangleMassCenterDEVICE(ABC);
@@ -288,6 +329,9 @@ __device__ TransformationWithDistance findOptimumTransformationABCDEVICE(Triangl
 
 	return result;
 }
+/*
+Ќаходим оптимальное преобазование среди ABC_ -> ABC, BCA_ -> ABC, CBA_ -> ABC 
+*/
 __device__ TransformationWithDistance findOptimumTransformationDEVICE(Triangle* ABC_, Triangle* ABC, float e, int maxIterations, int parts)
 {
 	TransformationWithDistance twdABC = findOptimumTransformationABCDEVICE(ABC_, ABC, e, maxIterations, parts);
@@ -310,22 +354,183 @@ __device__ TransformationWithDistance findOptimumTransformationDEVICE(Triangle* 
 }
 
 
-__global__ void fOTKernel(Triangle* ABC_, int ABC_size, Triangle* ABC, int ABCsize, TransformationWithDistance* result, int maxIterations, float e, int parts)
+typedef enum{ TYPE_ABC, TYPE_BCA, TYPE_CAB }TriangleType;
+__host__ TransformationWithDistance findOptimumTransformationABCParallelForHOST(Triangle* ABC_, TriangleType ABC_type, Triangle* ABC, float e, int maxIterations, int step, float stepSize)
 {
-	//extern __shared__ Triangle cache[];
-	int row = defaultRow();
-	int column = defaultColumn();
-
-	if (row < ABC_size && column < ABCsize)
+	Triangle newABC_;
+	if (ABC_type == TYPE_BCA)
 	{
-		Triangle abc_ = ABC_[row];
-		Triangle abc = ABC[column];
-		result[row * ABCsize + column] = findOptimumTransformationDEVICE(&abc_, &abc, e, maxIterations, parts);
+		newABC_.A = ABC_->B;
+		newABC_.B = ABC_->C;
+		newABC_.C = ABC_->A;
+	}
+	else
+		if (ABC_type == TYPE_CAB)
+		{
+			newABC_.A = ABC_->C;
+			newABC_.B = ABC_->A;
+			newABC_.C = ABC_->B;
+		}
+		else
+			newABC_ = *ABC_;
+
+	Point ABC_mc = countTriangleMassCenterHOST(&newABC_);
+	Triangle movedABC_ = countMovedTriangleHOST(&newABC_, -ABC_mc.x, -ABC_mc.y);
+
+	Point ABCmc = countTriangleMassCenterHOST(ABC);
+	Triangle movedABC = countMovedTriangleHOST(ABC, -ABCmc.x, -ABCmc.y);
+
+	float sProd = movedABC.A.x * movedABC_.A.x + movedABC.A.y * movedABC_.A.y + movedABC.B.x * movedABC_.B.x + movedABC.B.y * movedABC_.B.y + movedABC.C.x * movedABC_.C.x + movedABC.C.y * movedABC_.C.y;
+	float vProd = movedABC.A.x * movedABC_.A.y - movedABC.A.y * movedABC_.A.x + movedABC.B.x * movedABC_.B.y - movedABC.B.y * movedABC_.B.x + movedABC.C.x * movedABC_.C.y - movedABC.C.y * movedABC_.C.x;
+
+	TransformationWithDistance result;
+	result.transformation.dx = ABCmc.x; result.transformation.dy = ABCmc.y;
+	result.transformation.cos_phi = 1; result.transformation.sin_phi = 0;
+	result.distance = countDistanceBetweenTrianglesHOST(&movedABC, &movedABC_);
+
+	float optimumPhi = countOptimumlPhiHOST(step * stepSize - PI, sProd, vProd, maxIterations, e);
+	float optimum_cos = cosf(optimumPhi);
+	float optimum_sin = sinf(optimumPhi);
+
+	Triangle tmpTriangle = countRotatedTriangleHOST(&movedABC_, optimum_cos, optimum_sin);
+	float distance = countDistanceBetweenTrianglesHOST(&movedABC, &tmpTriangle);
+	if (distance < result.distance)
+	{
+		result.distance = distance;
+		result.transformation.cos_phi = optimum_cos;
+		result.transformation.sin_phi = optimum_sin;
+	}
+
+	return result;
+}
+__host__ TransformationWithDistance findOptimumTransformationParallelForHOST(Triangle* ABC_, Triangle* ABC, int maxIterations, float e, int parts)
+{
+	TransformationWithDistance* transformations = (TransformationWithDistance*)malloc(parts * 3 * sizeof(TransformationWithDistance));
+	
+	float stepSize = 2 * PI / parts;
+
+	for (int i = 0; i < parts; i++)
+	{
+		transformations[i] = findOptimumTransformationABCParallelForHOST(ABC_, TYPE_ABC, ABC, e, maxIterations, i, stepSize);
+		transformations[i + parts] = findOptimumTransformationABCParallelForHOST(ABC_, TYPE_BCA, ABC, e, maxIterations, i, stepSize);
+		transformations[i + 2 * parts] = findOptimumTransformationABCParallelForHOST(ABC_, TYPE_CAB, ABC, e, maxIterations, i, stepSize);
+	}
+	
+	TransformationWithDistance result = transformations[0];
+	for (int i = 0; i < 3 * parts; i++)
+		if (transformations[i].distance < result.distance)
+			result = transformations[i];
+
+	free(transformations);
+	return result;
+}
+
+__device__ TransformationWithDistance findOptimumTransformationABCParallelForDEVICE(Triangle* ABC_, TriangleType ABC_type, Triangle* ABC, float e, int maxIterations, int step, float stepSize)
+{
+	Triangle newABC_;
+	if (ABC_type == TYPE_BCA)
+	{
+		newABC_.A = ABC_->B;
+		newABC_.B = ABC_->C;
+		newABC_.C = ABC_->A;
+	}
+	else
+		if (ABC_type == TYPE_CAB)
+		{
+			newABC_.A = ABC_->C;
+			newABC_.B = ABC_->A;
+			newABC_.C = ABC_->B;
+		}
+		else
+			newABC_ = *ABC_;
+
+	Point ABC_mc = countTriangleMassCenterDEVICE(&newABC_);
+	Triangle movedABC_ = countMovedTriangleDEVICE(&newABC_, -ABC_mc.x, -ABC_mc.y);
+
+	Point ABCmc = countTriangleMassCenterDEVICE(ABC);
+	Triangle movedABC = countMovedTriangleDEVICE(ABC, -ABCmc.x, -ABCmc.y);
+
+	float sProd = movedABC.A.x * movedABC_.A.x + movedABC.A.y * movedABC_.A.y + movedABC.B.x * movedABC_.B.x + movedABC.B.y * movedABC_.B.y + movedABC.C.x * movedABC_.C.x + movedABC.C.y * movedABC_.C.y;
+	float vProd = movedABC.A.x * movedABC_.A.y - movedABC.A.y * movedABC_.A.x + movedABC.B.x * movedABC_.B.y - movedABC.B.y * movedABC_.B.x + movedABC.C.x * movedABC_.C.y - movedABC.C.y * movedABC_.C.x;
+
+	TransformationWithDistance result;
+	result.transformation.dx = ABCmc.x; result.transformation.dy = ABCmc.y;
+	result.transformation.cos_phi = 1; result.transformation.sin_phi = 0;
+	result.distance = countDistanceBetweenTrianglesDEVICE(&movedABC, &movedABC_);
+
+	float optimumPhi = countOptimumlPhiDEVICE(step * stepSize - PI, sProd, vProd, maxIterations, e);
+	float optimum_cos = cosf(optimumPhi);
+	float optimum_sin = sinf(optimumPhi);
+
+	Triangle tmpTriangle = countRotatedTriangleDEVICE(&movedABC_, optimum_cos, optimum_sin);
+	float distance = countDistanceBetweenTrianglesDEVICE(&movedABC, &tmpTriangle);
+	if (distance < result.distance)
+	{
+		result.distance = distance;
+		result.transformation.cos_phi = optimum_cos;
+		result.transformation.sin_phi = optimum_sin;
+	}
+
+	return result;
+}
+
+//cuda
+//parallel for version
+__global__ void findOptimumTransormationParallelForVersion(Triangle* ABC_, int ABC_size, Triangle* ABC, int ABCsize, TransformationWithDistance* result, float e, int maxIterations, int parts)
+{
+	extern __shared__ TransformationWithDistance cacheTWD[];
+	__shared__ Triangle ABCcache;
+	__shared__ float stepSize;
+
+	/*
+    7
+   ABC_
+	y
+	^
+	|
+	--> x ABC 200
+
+
+	ABC_ -> row    -> y
+	ABC  -> column -> x
+	#define defaultRow() blockIdx.y*blockDim.y + threadIdx.y
+	#define defaultColumn() blockIdx.x*blockDim.x + threadIdx.x
+	*/
+
+	if (threadIdx.x == 0 && threadIdx.y == 0)
+	{
+		ABCcache = ABC[blockIdx.x];
+		stepSize = 2 * PI / parts;
+	}
+	
+	__syncthreads();
+
+	
+	int row = defaultRow();
+
+	if (row < ABC_size && threadIdx.x < 3 * parts)
+	{
+		Triangle ABC_cache = ABC_[row];
+		int pos = threadIdx.x + threadIdx.y * 3 * parts;
+		cacheTWD[pos] = findOptimumTransformationABCParallelForDEVICE(&ABC_cache, TriangleType(threadIdx.x % 3), &ABCcache, e, maxIterations, threadIdx.x % parts, stepSize);
+	}
+
+	__syncthreads();
+	if (threadIdx.x == 0)
+	{
+		TransformationWithDistance resultTWD = cacheTWD[threadIdx.y * 3 * parts];
+		for (int i = 1; i < parts * 3; i++)
+		{
+			if (cacheTWD[threadIdx.y * 3 * parts + i].distance < resultTWD.distance)
+				resultTWD = cacheTWD[threadIdx.y * 3 * parts + i];
+		}
+		
+		result[row * ABCsize + blockIdx.x] = resultTWD;
 	}
 }
-cudaError_t findOptimumTransformationWithCuda(Triangle* ABC_, int ABC_size, Triangle* ABC, int ABCsize, TransformationWithDistance* result, int maxIterations, float e, int parts)
+cudaError_t findOptimumTransformationParallelForWithCuda(Triangle* ABC_, int ABC_size, Triangle* ABC, int ABCsize, TransformationWithDistance* result, int maxIterations, float e, int parts)
 {
-	
+
 	Triangle* devABC_;
 	Triangle* devABC;
 	TransformationWithDistance* devResult;
@@ -352,11 +557,11 @@ cudaError_t findOptimumTransformationWithCuda(Triangle* ABC_, int ABC_size, Tria
 	if (cudaStatus != cudaSuccess)
 		goto Error;
 
+	//findOptimumTransormationParallelForVersion(Triangle* ABC_, int ABC_size, Triangle* ABC, int ABCsize, TransformationWithDistance* result, float e, int maxIterations, int parts)
 	dim3 threads(defaultThreadCount, defaultThreadCount);
-	dim3 blocks(ceilMod(ABC_size, defaultThreadCount), ceilMod(ABCsize,defaultThreadCount));
+	dim3 blocks(ABCsize, ceilMod(ABC_size, defaultThreadCount));
+	findOptimumTransormationParallelForVersion <<< blocks, threads, defaultThreadCount * defaultThreadCount * sizeof(TransformationWithDistance) >>>(devABC_, ABC_size, devABC, ABCsize, devResult, e, maxIterations, parts);
 
-	//void findOptimumTransformationKernel(Triangle* ABC_, int ABC_size, Triangle* ABC, int ABCsize, TransformationWithDistance* result, int maxIterations, float e, int parts)
-	fOTKernel <<< blocks, threads >>>(devABC_, ABC_size, devABC, ABCsize, devResult, maxIterations, e, parts);
 
 	cudaStatus = cudaGetLastError();
 	if (cudaStatus != cudaSuccess)
@@ -378,12 +583,80 @@ Error:
 	return cudaStatus;
 }
 
+//non-parellel for version
+__global__ void fOTKernel(Triangle* ABC_, int ABC_size, Triangle* ABC, int ABCsize, TransformationWithDistance* result, int maxIterations, float e, int parts)
+{
+	//extern __shared__ Triangle cache[];
+	int row = defaultRow();
+	int column = defaultColumn();
+
+	if (row < ABC_size && column < ABCsize)
+	{
+		Triangle abc_ = ABC_[row];
+		Triangle abc = ABC[column];
+		result[row * ABCsize + column] = findOptimumTransformationDEVICE(&abc_, &abc, e, maxIterations, parts);
+	}
+}
+cudaError_t findOptimumTransformationNonParallelForWithCuda(Triangle* ABC_, int ABC_size, Triangle* ABC, int ABCsize, TransformationWithDistance* result, int maxIterations, float e, int parts)
+{
+	Triangle* devABC_;
+	Triangle* devABC;
+	TransformationWithDistance* devResult;
+
+	cudaError_t cudaStatus;
+
+	cudaStatus = cudaMalloc((void**)& devABC_, ABC_size * sizeof(Triangle));
+	if (cudaStatus != cudaSuccess)
+	goto Error;
+
+	cudaStatus = cudaMalloc((void**)& devABC, ABCsize * sizeof(Triangle));
+	if (cudaStatus != cudaSuccess)
+	goto Error;
+
+	cudaStatus = cudaMalloc((void**)& devResult, ABC_size * ABCsize * sizeof(TransformationWithDistance));
+	if (cudaStatus != cudaSuccess)
+	goto Error;
+
+	cudaStatus = cudaMemcpy(devABC_, ABC_, ABC_size * sizeof(Triangle), cudaMemcpyHostToDevice);
+	if (cudaStatus != cudaSuccess)
+	goto Error;
+
+	cudaStatus = cudaMemcpy(devABC, ABC, ABCsize * sizeof(Triangle), cudaMemcpyHostToDevice);
+	if (cudaStatus != cudaSuccess)
+	goto Error;
+
+	dim3 threads(defaultThreadCount, defaultThreadCount);
+	dim3 blocks(ceilMod(ABC_size, defaultThreadCount), ceilMod(ABCsize,defaultThreadCount));
+
+	//void findOptimumTransformationKernel(Triangle* ABC_, int ABC_size, Triangle* ABC, int ABCsize, TransformationWithDistance* result, int maxIterations, float e, int parts)
+	fOTKernel <<< blocks, threads >>>(devABC_, ABC_size, devABC, ABCsize, devResult, maxIterations, e, parts);
+
+	cudaStatus = cudaGetLastError();
+	if (cudaStatus != cudaSuccess)
+	goto Error;
+
+	cudaStatus = cudaDeviceSynchronize();
+	if (cudaStatus != cudaSuccess)
+	goto Error;
+
+	cudaStatus = cudaMemcpy(result, devResult, ABC_size * ABCsize * sizeof(TransformationWithDistance), cudaMemcpyDeviceToHost);
+	if (cudaStatus != cudaSuccess)
+	goto Error;
+
+Error:
+	cudaFree(devABC_);
+	cudaFree(devABC);
+	cudaFree(devResult);
+
+	return cudaStatus;
+}
+
 int main()
 {
 	int max_rand = 100;
 
-	int ABCsize = 100;
-	int ABC_size = 200;
+	int ABC_size = 100;
+	int ABCsize = 200;
 	Triangle* ABC = (Triangle*)malloc(ABCsize * sizeof(Triangle));
 	Triangle* ABC_ = (Triangle*)malloc(ABC_size * sizeof(Triangle));
 
@@ -421,16 +694,30 @@ int main()
 
 
 	TransformationWithDistance* result = (TransformationWithDistance*)malloc(ABC_size * ABCsize * sizeof(TransformationWithDistance));
-	cudaError_t cudaStatus = findOptimumTransformationWithCuda(ABC_, ABC_size, ABC, ABCsize, result, 10, 0.00001f, 3);
-
-	TransformationWithDistance dest = findOptimumTransformationHOST(&ABC_[56], &ABC[4], 0.00001f, 10, 3);
-
+	
+	cudaError_t cudaStatus = findOptimumTransformationParallelForWithCuda(ABC_, ABC_size, ABC, ABCsize, result, 10, 0.00001f, 5);
+	TransformationWithDistance firstResult = result[56 * 200 + 4];
+	
 	if (cudaStatus != cudaSuccess)
 		goto End;
 
 	cudaStatus = cudaDeviceReset();
 	if (cudaStatus != cudaSuccess)
 		goto End;
+
+	cudaStatus = findOptimumTransformationNonParallelForWithCuda(ABC_, ABC_size, ABC, ABCsize, result, 10, 0.00001f, 5);
+	TransformationWithDistance secondResult = result[56 * 200 + 4];
+	
+	if (cudaStatus != cudaSuccess)
+		goto End;
+		
+	cudaStatus = cudaDeviceReset();
+	if (cudaStatus != cudaSuccess)
+		goto End;
+
+	TransformationWithDistance dest = findOptimumTransformationHOST(&ABC_[56], &ABC[4], 0.00001f, 10, 5);
+	TransformationWithDistance dest2 = findOptimumTransformationParallelForHOST(&ABC_[56], &ABC[4], 10, 0.00001f, 5);
+	float distance = countDistanceBetweenTrianglesHOST(&ABC_[56], &ABC[4]);
 
 End:
 	free(ABC);
