@@ -3,12 +3,6 @@
 <br><b>DelaunayTriangulationSample</b>:
 <br>Программа строит из заданных точек триангуляцию Делоне. Двухпроходной алгоритм. Первый проход - веерный.
 <br>
-<br><b>OptimumConversionOfTriangleSample</b>:
-<br>Построение афинного преобразования (сдвиг+поворот, без масштабирования), наиболее сближающего треугольники.
-<br>
-<br><b>DelaunayTrianglelationWithAffineTransformation</b>:
-<br>Попытка распознать отпечатки пальцев.
-<br>
 <br><b>GameWithWords</b>:
 <br>Клиент-серверная игра в слова. Протокол - TCP.
 <br>
@@ -27,5 +21,8 @@
 <br>
 <h1 align="right">C</h1>
 <br>
-<br><b>TriangleMatcherWithCUDA</b>:
-<br>Построение матрицы преобразований для двух наборов треугольников, с применением CUDA .
+<br><b>TriangleMatcherWithStucturesCUDA</b>:
+<br>Построение матрицы преобразований для двух наборов треугольников, с применением CUDA. C использованием структур. 
+<br>
+<br><b>TriangleMatcherWithoutStructuresCUDA</b>:
+<br>Построение матрицы преобразований для двух наборов треугольников, с применением CUDA. Без использования структур.
