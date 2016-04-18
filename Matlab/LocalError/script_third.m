@@ -24,6 +24,6 @@ end;
 
 subplot(1,2,1);
 plot(time, x); hold on; grid on;
-plot(time, y); hold on; grid on; legend('Численное','С заданными y(tk)=xk');
+plot(time, y); hold on; grid on; legend('Р§РёСЃР»РµРЅРЅРѕРµ','РЎ Р·Р°РґР°РЅРЅС‹РјРё y(tk)=xk');
 subplot(1,2,2);
-plot(time, h); hold on; grid on;  legend('Ошибка'); 
+plot(time, h); hold on; grid on;  legend('РћС€РёР±РєР°'); 

@@ -28,6 +28,6 @@ subplot(1,2,1);
 plot(time, x); hold on; grid on;
 plot(time, y); hold on; grid on; 
 plot(time, y1); hold on; grid on; 
-legend('Численное','С заданными y(tk)=xk','Общее');
+legend('Р§РёСЃР»РµРЅРЅРѕРµ','РЎ Р·Р°РґР°РЅРЅС‹РјРё y(tk)=xk','РћР±С‰РµРµ');
 subplot(1,2,2);
-plot(time, h); hold on; grid on;  legend('Ошибка');
+plot(time, h); hold on; grid on;  legend('РћС€РёР±РєР°');
