@@ -69,12 +69,36 @@ namespace FormClient
                 MessageBox.Show(trapezeIntegrator.Integrate(f_one_argument.GetValue, d_2_one_argument.GetValue, from, to, error).ToString());
             }
             else
+            if (RadioSimpsons.Checked)
             {
-                Derivator.IManyArgumentsDerivative d_2_many_arguments = derivator.Derivate(function, variable, 4);
-                FunctionContainer.IFunction d_2_one_argument = functionContainer.CreateOneArgumentFunction(d_2_many_arguments.GetValue, args, variable);
+                Derivator.IManyArgumentsDerivative d_4_many_arguments = derivator.Derivate(function, variable, 4);
+                FunctionContainer.IFunction d_4_one_argument = functionContainer.CreateOneArgumentFunction(d_4_many_arguments.GetValue, args, variable);
 
                 IntegrationLib.Integrators.SimpsonsIntegrator simpsonsIntegrator = new IntegrationLib.Integrators.SimpsonsIntegrator();
-                MessageBox.Show(simpsonsIntegrator.Integrate(f_one_argument.GetValue, d_2_one_argument.GetValue, from, to, error).ToString());
+                MessageBox.Show(simpsonsIntegrator.Integrate(f_one_argument.GetValue, d_4_one_argument.GetValue, from, to, error).ToString());
+            }
+            else
+            {
+                Derivator.IManyArgumentsDerivative d_2_many_arguments = derivator.Derivate(function, variable, 2);
+                Derivator.IManyArgumentsDerivative d_4_many_arguments = derivator.Derivate(function, variable, 4);
+
+                FunctionContainer.IFunction d_2_one_argument = functionContainer.CreateOneArgumentFunction(d_2_many_arguments.GetValue, args, variable);
+                FunctionContainer.IFunction d_4_one_argument = functionContainer.CreateOneArgumentFunction(d_4_many_arguments.GetValue, args, variable);
+
+                IntegrationLib.Integrators.RectanglesIntegrator rectanglesIntegrator = new IntegrationLib.Integrators.RectanglesIntegrator();
+                IntegrationLib.Integrators.TrapezeIntegrator trapezeIntegrator = new IntegrationLib.Integrators.TrapezeIntegrator();
+                IntegrationLib.Integrators.SimpsonsIntegrator simpsonsIntegrator = new IntegrationLib.Integrators.SimpsonsIntegrator();
+
+                Container cnt = new Container();
+                cnt.Add(rectanglesIntegrator, "Rectangles");
+                cnt.Add(trapezeIntegrator, "Trapeze");
+                cnt.Add(simpsonsIntegrator, "Simpsons");
+
+                String result = "Прямоугольники:\t" + rectanglesIntegrator.Integrate(f_one_argument.GetValue, d_2_one_argument.GetValue, from, to, error).ToString() + "\n";
+                result += "Трапеции:\t" + trapezeIntegrator.Integrate(f_one_argument.GetValue, d_2_one_argument.GetValue, from, to, error).ToString() + "\n";
+                result += "Симпсон:\t\t" + simpsonsIntegrator.Integrate(f_one_argument.GetValue, d_2_one_argument.GetValue, from, to, error).ToString() + "\n";
+
+                MessageBox.Show(result);
             }
         }
     }

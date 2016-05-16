@@ -42,6 +42,7 @@
             this.RadioSimpsons = new System.Windows.Forms.RadioButton();
             this.Integrate = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.AllMethods = new System.Windows.Forms.RadioButton();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -201,7 +202,7 @@
             this.Integrate.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.Integrate.Location = new System.Drawing.Point(136, 362);
+            this.Integrate.Location = new System.Drawing.Point(137, 375);
             this.Integrate.Name = "Integrate";
             this.Integrate.Size = new System.Drawing.Size(216, 79);
             this.Integrate.TabIndex = 12;
@@ -219,12 +220,24 @@
             this.pictureBox1.TabIndex = 13;
             this.pictureBox1.TabStop = false;
             // 
+            // AllMethods
+            // 
+            this.AllMethods.AutoSize = true;
+            this.AllMethods.Location = new System.Drawing.Point(32, 341);
+            this.AllMethods.Name = "AllMethods";
+            this.AllMethods.Size = new System.Drawing.Size(164, 23);
+            this.AllMethods.TabIndex = 14;
+            this.AllMethods.TabStop = true;
+            this.AllMethods.Text = "Все методы сразу";
+            this.AllMethods.UseVisualStyleBackColor = true;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 19F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(501, 466);
+            this.Controls.Add(this.AllMethods);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.Integrate);
             this.Controls.Add(this.RadioSimpsons);
@@ -265,6 +278,7 @@
         private System.Windows.Forms.RadioButton RadioSimpsons;
         private System.Windows.Forms.Button Integrate;
         private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.RadioButton AllMethods;
     }
 }
 

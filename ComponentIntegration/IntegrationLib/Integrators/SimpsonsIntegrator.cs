@@ -6,9 +6,9 @@ namespace IntegrationLib.Integrators
 {
     public class SimpsonsIntegrator: Component
     {
-        private double CountStep(double from, double to, double err, double d4Max)
+        private int Count2N(double from, double to, double err, double d4Max)
         {
-            return Math.Sqrt(Math.Sqrt(180 * err / ((to - from) * (d4Max+10))))/64;
+            return (int)Math.Round(Math.Sqrt(Math.Sqrt((to - from)* (to - from) * (to - from) * (to - from) * (to - from) * d4Max / (2880* err)))) + 16000;
         }
 
         private double GetMaxValueOf(Func<double, double> function, double from, double to)
@@ -29,53 +29,78 @@ namespace IntegrationLib.Integrators
         {
             double result = 0;
 
-            double h = CountStep(from, to, err, GetMaxValueOf(d4, from, to));
+            int n2 = Count2N(from, to, err, GetMaxValueOf(d4, from, to));
+            if (n2 % 2 == 1)
+                n2++;
 
-            int n = (int)((to - from) / h);
-
-            double[] f_i = new double[2 * n - 1];
-            for (int i = 0; i < 2 * n - 1; i++)
-                f_i[i] = function(from + i * (h / 2));
-
-
-            for (int i = 0; i < f_i.Length - 1;)
+            double[] y = new double[n2 + 1];
+            for (int i = 0; i <= n2; i++)
             {
-                result += (f_i[i] + 4 * f_i[i +1] + f_i[i + 2]);
-                i += 2;
+                double x_i = from + ((to - from) / n2) * i;
+                y[i] = function(x_i);
+            }
+            
+
+            for (int i = 1; i <= n2; i++)
+            {
+                if (i % 2 == 0)
+                    result += 2 * y[i];
+                else
+                    result += 4 * y[i];
             }
 
-            return h* result/6;
+            result += y[0] + y[n2];
+
+            return result * ((to - from) / n2) / 3;
         }
 
         public double Integrate(Func<double, double> function, double d4Max, double from, double to, double err)
         {
             double result = 0;
 
-            double h = CountStep(from, to, err, d4Max);
-            int n = (int)((to - from) / h);
+            int n2 = Count2N(from, to, err, d4Max);
+            if (n2 % 2 == 1)
+                n2++;
 
-            double[] f_i = new double[2 * n - 1];
-            for (int i = 0; i < 2 * n - 1; i++)
-                f_i[i] = function(from + i * (h / 2));
+            n2 = 16000;
 
 
-            for (int i = 0; i < f_i.Length-1;)
+            double[] y = new double[n2 + 1];
+            for (int i = 0; i <= n2; i++)
             {
-                result += (f_i[i]+ 4* f_i[i+1]+f_i[i+2]);
-                i += 2;
+                double x_i = from + ((to - from) / n2) * i;
+                y[i] = function(x_i);
             }
 
-            return h*result/6;
+
+            for (int i = 1; i <= n2; i++)
+            {
+                if (i % 2 == 0)
+                    result += 2 * y[i];
+                else
+                    result += 4 * y[i];
+            }
+
+            result += y[0] + y[n2];
+
+            return result * ((to - from) / n2) / 3;
         }
 
-        public double Integrate(double[] x, double[] y)
+        public double Integrate(double[] y, double h)
         {
             double result = 0;
 
-            for (int i = 0; i < x.Length - 2; i++)
-                result += (x[i + 2] - x[i]) * (y[i] + 4 * y[i + 1] + y[i + 2]) / 6;
+            result += y[0] + y[y.Length - 1];
 
-            return result;
+            for (int i = 1; i <= y.Length - 2; i++)
+            {
+                if (i % 2 == 0)
+                    result += 2 * y[i];
+                else
+                    result += 4 * y[i];
+            }
+
+            return result * h / 3;
         }
     }
 }
