@@ -11,8 +11,12 @@ namespace MultiThreadFileCopy.Classes
     /// </summary>
     public class ConcurrentNonSizebleQueue<T>
     {
+        /// <summary>
+        /// Основа - обычная очередь
+        /// </summary>
         private ConcurrentQueue<T> queue = new ConcurrentQueue<T>();
         private readonly Object lockObj = new Object();
+
 
         private volatile int maxSize;
         /// <summary>

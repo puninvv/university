@@ -34,17 +34,34 @@
                 <ToggleButton x:Name="buttonSaveFile"   Grid.Column="0" Click="buttonSaveFile_Click"    Content="OutputFile"/>
                 <Label x:Name="textBlockOutputFileName" Grid.Column="1"/>
             </Grid>
-            <ProgressBar x:Name="progressReading" Value="0" Minimum="0" Maximum="100"/>
+            <Grid Margin="20,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" MaxWidth="80"/>
+                    <ColumnDefinition Width="3*"/>
+                </Grid.ColumnDefinitions>
+                <Label x:Name="labelProgress" Grid.Column="0" Content="Progress"/>
+                <ProgressBar x:Name="progressReading" Grid.Column="1" Height="10" Value="0" Minimum="0" Maximum="100" Margin="20,0"/>
+            </Grid>
         </StackPanel>
         <StackPanel Grid.Column="0" Grid.Row="1">
             <Label Content="Buffer" HorizontalAlignment="Center"/>
             <Grid Margin="20,10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*" MaxWidth="30"/>
-                    <ColumnDefinition Width="1*" MaxWidth="60"/>
+                    <ColumnDefinition Width="1*" MaxWidth="70"/>
                 </Grid.ColumnDefinitions>
                 <ToggleButton x:Name="buttonSetBufferSize" Click="buttonSetBufferSize_Click" Grid.Column="0" Content ="Set"/>
-                <TextBox x:Name="textBoxBufferSize"  Grid.Column="1" Text="100"/>
+                <TextBox x:Name="textBoxBufferSize"  Grid.Column="1" Text="100" Margin="20,0"/>
+            </Grid>
+            <Grid Margin="20,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="110"/>
+                    <ColumnDefinition Width="50"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <Label x:Name="labelBufferSize" Content="Elements in buffer" />
+                <Label x:Name="labelBufferSizeChangeable" Grid.Column="1"/>
+                <ProgressBar x:Name="progressBuferSize" Grid.Column="2" Height="10" Margin="20,10"/>
             </Grid>
         </StackPanel>
         <StackPanel Grid.Column="1" Grid.Row="1">

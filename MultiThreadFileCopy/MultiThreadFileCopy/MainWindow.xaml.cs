@@ -29,6 +29,8 @@ namespace MultiThreadFileCopy
         private Classes.ReaderThread reader;
         private Classes.WriterThread writer;
         private Classes.ConcurrentNonSizebleQueue<short> buffer;
+
+        private DispatcherTimer timer;
  
         public MainWindow()
         {
@@ -39,9 +41,19 @@ namespace MultiThreadFileCopy
             inputFile = null;
             outputFile = null;
             bufferSize = -1;
-            progressReading.Visibility = Visibility.Hidden;     
+            labelProgress.Visibility = progressReading.Visibility = Visibility.Hidden;
+
+            timer = new DispatcherTimer();
+            timer.Interval = new TimeSpan(500);
+            timer.Tick += Timer_Tick;
+            progressBuferSize.Minimum = 0;
         }
 
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            progressBuferSize.Value = buffer.CurrentSize;
+            labelBufferSizeChangeable.Content = buffer.CurrentSize;
+        }
 
         //работа с кнопочками
         private void buttonOpenFile_Click(object sender, RoutedEventArgs e)
@@ -84,6 +96,7 @@ namespace MultiThreadFileCopy
                 if (buffer != null)
                     buffer.MaxSize = bufferSize;
                 buttonSetBufferSize.IsChecked = true;
+                progressBuferSize.Maximum = bufferSize;
             }
             else
             {
@@ -91,8 +104,7 @@ namespace MultiThreadFileCopy
                 MessageBox.Show("Некорректный размер буфера");
             }
         }
-
-
+        
 
         //работа с ридером
         private void readerButtons(bool start, bool pause, bool stop)
@@ -131,7 +143,9 @@ namespace MultiThreadFileCopy
             }
 
             buttonOpenFile.IsEnabled = false;
-            progressReading.Visibility = Visibility.Visible;
+            if (timer.IsEnabled == false)
+                timer.IsEnabled = true;
+            labelProgress.Visibility = progressReading.Visibility = Visibility.Visible;
 
 
             readerButtons(false, true, true);
@@ -147,7 +161,7 @@ namespace MultiThreadFileCopy
                 buttonOpenFile.IsEnabled = true;
                 buttonSaveFile.IsEnabled = true;
                 progressReading.Value = 0;
-                progressReading.Visibility = Visibility.Hidden;
+                labelProgress.Visibility = progressReading.Visibility = Visibility.Hidden;
 
                 readerButtons(true, false, false);
             }));
@@ -177,7 +191,7 @@ namespace MultiThreadFileCopy
             writerButtons(true, false, false);
             writer = null;
 
-            progressReading.Visibility = Visibility.Hidden;
+            labelProgress.Visibility = progressReading.Visibility = Visibility.Hidden;
             buttonOpenFile.IsEnabled = true;
             buttonSaveFile.IsEnabled = true;
 
@@ -190,10 +204,15 @@ namespace MultiThreadFileCopy
             textBlockOutputFileName.Content = "";
 
             progressReading.Value = 0;
+
+
+            timer.IsEnabled = false;
+            progressBuferSize.Value = 0;
+            labelBufferSizeChangeable.Content = "";
         }
 
+        
         //работа с райтером
-
         private void writerButtons(bool start, bool pause, bool stop)
         {
             buttonWriterStart.IsEnabled = start;
@@ -229,7 +248,10 @@ namespace MultiThreadFileCopy
             }
 
             buttonSaveFile.IsEnabled = false;
-            
+
+            if (timer.IsEnabled == false)
+                timer.IsEnabled = true;
+
             buttonWriterStart.IsEnabled = false;
             buttonWriterStop.IsEnabled = true;
             buttonWriterPause.IsEnabled = true;
@@ -255,7 +277,7 @@ namespace MultiThreadFileCopy
                 writerButtons(true, false, false);
                 writer = null;
 
-                progressReading.Visibility = Visibility.Hidden;
+                labelProgress.Visibility = progressReading.Visibility = Visibility.Hidden;
                 buttonOpenFile.IsEnabled = true;
                 buttonSaveFile.IsEnabled = true;
 
@@ -268,6 +290,10 @@ namespace MultiThreadFileCopy
                 textBlockOutputFileName.Content = "";
 
                 progressReading.Value = 0;
+
+                timer.IsEnabled = false;
+                progressBuferSize.Value = 0;
+                labelBufferSizeChangeable.Content = "";
             }));
         }
 
