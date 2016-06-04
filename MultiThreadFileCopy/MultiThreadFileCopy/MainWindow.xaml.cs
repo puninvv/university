@@ -21,6 +21,8 @@ namespace MultiThreadFileCopy
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml
     /// </summary>
+    /// <seealso cref="System.Windows.Window" />
+    /// <seealso cref="System.Windows.Markup.IComponentConnector" />
     public partial class MainWindow : Window
     {
         private string  inputFile;
