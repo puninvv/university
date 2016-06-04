@@ -28,7 +28,7 @@
 <br>
 <h1 align="right">C</h1>
 <br>
-<br><b>TriangleMatcherWithStucturesCUDA</b>:
+<br><b>CUDA</b>:
 <br>Построение матрицы преобразований для двух наборов треугольников, с применением CUDA. C использованием структур. Используется в <a href="https://github.com/Stanislav-Sartasov/CUDA-Fingerprinting">реальном</a> проекте
 <br>
 <h1 align="right">MATLAB</h1>
