@@ -154,3 +154,5 @@ $RECYCLE.BIN/
 
 # Mac desktop service store files
 .DS_Store
+/ApmathCloudTest/App_Data/PublishProfiles/ApmathCloudTest - Web Deploy.pubxml
+/ApmathCloudTest/website.publishproj
