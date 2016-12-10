@@ -21,9 +21,26 @@ namespace Server
 
         static void update_bases()
         {
-            timeOfGame = Convert.ToInt32(System.IO.File.ReadAllText("time.txt"));
+            try
+            {
+                timeOfGame = Convert.ToInt32(System.IO.File.ReadAllText("time.txt"));
+            }
+            catch (FileNotFoundException ex)
+            {
+                Console.WriteLine("Файл time.txt не найден");
+            }
             Console.WriteLine("Время игры:"+timeOfGame);
-            gen_words_base = System.IO.File.ReadAllLines("gen_words_base.txt");
+
+            try
+            {
+                gen_words_base = System.IO.File.ReadAllLines("gen_words_base.txt");
+            }
+            catch (FileNotFoundException ex)
+            {
+                Console.WriteLine("Файл gen_word_base.txt не найден. Используются слова по-умолчанию");
+                gen_words_base = new string[] { "хлебушек", "синхрофазатрон", "класснаяиграомг" };
+            }
+
             Console.WriteLine("Базы слов загружены!");
         }
         static string GenerateWord()

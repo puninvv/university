@@ -27,7 +27,15 @@ namespace Client
 
 
         private void UpdateBases() {
-            BaseOfWords = File.ReadAllLines("words.txt");
+            try
+            {
+                BaseOfWords = System.IO.File.ReadAllLines("words.txt");
+            }
+            catch (FileNotFoundException ex)
+            {
+                Console.WriteLine("Файлwords не найден. Используются слова по-умолчанию");
+                BaseOfWords = new string[] { "хлебушек", "синхрофазатрон", "класснаяиграомг" };
+            }
         }
         private Boolean IsInBase(String word)
         {
@@ -44,7 +52,7 @@ namespace Client
             }
             catch
             {
-                Server = new TcpClient("217.197.2.20", 1488);
+                Server = new TcpClient("localhost", 1488);
             }
             ns = Server.GetStream();
         }
