@@ -1,0 +1,46 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<meta charset="utf-8" />
+    <title>Почти вольфрам</title>
+    <link rel="stylesheet" type="text/css" href="Styles\Styles.css">
+    <script src="Scripts/jquery.js"></script>
+    <script>
+        var uri = "api/function";
+        var outputstring = "sin(x)+cos(x)-log(e^(2*x))";
+
+        function replaceAll(str, find, replace) {
+            return str.replace(find,replace);
+        }
+
+        function getFormulaFromBody() {
+            var result = $("#mainFormula").val();
+            result = result.replace(/\+/g, "_add_");
+            result = result.replace(/\-/g, "_min_");
+            result = result.replace(/\*/g, "_mul_");
+            result = result.replace(/[/]/g, "_div_");
+            result = result.replace(/\^/g, "_pow_");
+            return result;
+        }
+
+
+        function countFunctionValue() {
+            $.getJSON(uri + '/' + getFormulaFromBody())
+                .done(function (data) {
+                    alert(data);
+                })
+                .fail(function (jqXHR, textStatus, err) {
+                    alert('ERROR:' + err);
+                })
+        }
+    </script>
+</head>
+<body>
+    <div class="centeredElement">
+        <h1>Почти-вольфрам</h1>
+        <input type="text" id="mainFormula" value="20+sin(x)*ln(cos(x^2)) where x=5,y=6,z=-10" required />
+        <input type="button" id="mainButton"onclick="countFunctionValue()" value="Мне повезет?" placeholder="Пожалуйста, не нажимайте на эту кнопку!" />
+    </div>
+</body>
+</html>
