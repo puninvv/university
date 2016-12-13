@@ -24,8 +24,19 @@
             return result;
         }
 
-
+        function isInputFunctionCorrect() {
+            var mainFormula = $("#mainFormula");
+            if (mainFormula.val() == "") {
+                mainFormula.css({ "border-style": "solid", "border-color": "red", "border-width": "2px", "border-radius": "4px" });
+                return false;
+            } else {
+                mainFormula.css({ "border-style": "solid", "border-color": "#ccc", "border-width": "2px", "border-radius": "4px" });
+                return true;
+            }
+        }
+        
         function countFunctionValue() {
+            if (!isInputFunctionCorrect()) return;
             $.getJSON(uri + '/' + getFormulaFromBody())
                 .done(function (data) {
                     alert(data);
@@ -39,7 +50,7 @@
 <body>
     <div class="centeredElement">
         <h1>Почти-вольфрам</h1>
-        <input type="text" id="mainFormula" value="20+sin(x)*ln(cos(x^2)) where x=5,y=6,z=-10" required />
+        <input type="text" id="mainFormula" value="20+sin(x)*ln(cos(x^2))-(-y^(3/2)) where x=5,y=6,z=-10" required />
         <input type="button" id="mainButton"onclick="countFunctionValue()" value="Мне повезет?" placeholder="Пожалуйста, не нажимайте на эту кнопку!" />
     </div>
 </body>

@@ -1,5 +1,9 @@
 ﻿body{
-    background-color:#48F9CD;
+    background-color:#48F9CD ;
+    background-image: url(../Pictures/cat.png); 
+    background-position: right bottom; 
+    background-attachment: fixed;
+    background-repeat: no-repeat; 
 }
 .centeredElement {
     width: 600px;
@@ -21,9 +25,8 @@
 input[type=text], select {
     width: 100%;
     padding: 12px 20px;
-    margin: 8px 0;
     display: inline-block;
-    border: 1px solid #ccc;
+    border: 2px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
 }

@@ -118,6 +118,7 @@
   <ItemGroup>
     <Content Include="Global.asax" />
     <Content Include="index.html" />
+    <Content Include="Pictures\cat.png" />
     <Content Include="Scripts\jquery.js" />
     <Content Include="Styles\Styles.css" />
     <Content Include="Web.config">

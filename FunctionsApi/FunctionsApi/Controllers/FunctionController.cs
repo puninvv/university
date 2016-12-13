@@ -25,6 +25,9 @@ namespace FunctionsApi.Controllers
             {
                 var parsedValues = ParseFunction(function);
 
+                if (parsedValues == null)
+                    return "Произошла ошибка при парсинге";
+
                 var clearFunction = parsedValues.Item1;
                 var variables = parsedValues.Item2;
 
@@ -32,7 +35,7 @@ namespace FunctionsApi.Controllers
             }
             catch (Exception ex)
             {
-                throw new ArgumentException("Что-то не то введено");
+                return "Произошла какая-то ошибка, хз что за ошибка, но она произошла";
             }
         }
 
@@ -65,17 +68,40 @@ namespace FunctionsApi.Controllers
             foreach (var item in variables)
             {
                 var splittedPair = item.Split('=');
-                resultVariables.Add(splittedPair[0][0], double.Parse(splittedPair[1], System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.NumberFormatInfo.InvariantInfo));
+                try
+                {
+                    resultVariables.Add(splittedPair[0][0], double.Parse(splittedPair[1], System.Globalization.NumberStyles.AllowDecimalPoint | System.Globalization.NumberStyles.AllowLeadingSign, System.Globalization.NumberFormatInfo.InvariantInfo));
+                }
+                catch (Exception ex)
+                {
+                    return null;
+                }
             }
 
             return new Tuple<string, Dictionary<char, double>>(resultFunction, resultVariables);
         }
 
-        private double Evaluate(string _function, Dictionary<char, double> _variables)
+        private object Evaluate(string _function, Dictionary<char, double> _variables)
         {
             var parser = new IntegrationLib.Parser();
-            var resultFunction = parser.ParseString(_function);
-            return resultFunction.GetValue(_variables);
+            Parser.IManyArgumentsFunction resultFunction = null;
+            try
+            {
+                resultFunction = parser.ParseString(_function);
+            }
+            catch (Exception ex)
+            {
+                return "Ошибка при парсинге";
+            }
+
+            try
+            {
+                return resultFunction.GetValue(_variables);
+            }
+            catch (Exception ex)
+            {
+                return "Ошибка при вычислении значения распарсенного выражения";
+            }
         }
     }
 }
