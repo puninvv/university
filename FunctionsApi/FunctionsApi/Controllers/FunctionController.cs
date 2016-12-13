@@ -43,6 +43,7 @@ namespace FunctionsApi.Controllers
             _function = _function.Replace("_mul_", "*");
             _function = _function.Replace("_div_", "/");
             _function = _function.Replace("_pow_", "^");
+            _function = _function.Replace("_dot_", ".");
 
             _function = _function.ToLowerInvariant();
         }
@@ -58,13 +59,13 @@ namespace FunctionsApi.Controllers
             var whereLength = WHERE.Length;
 
             var resultFunction = _function.Substring(0, indexOfWhere - 1);
-            var variablesString = _function.Substring(indexOfWhere + 5, _function.Length - indexOfWhere - whereLength - 1);
+            var variablesString = _function.Substring(indexOfWhere + 5, _function.Length - indexOfWhere - whereLength);
 
             var variables = variablesString.Split(',');
             foreach (var item in variables)
             {
                 var splittedPair = item.Split('=');
-                resultVariables.Add(splittedPair[0][0], double.Parse(splittedPair[1]));
+                resultVariables.Add(splittedPair[0][0], double.Parse(splittedPair[1], System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.NumberFormatInfo.InvariantInfo));
             }
 
             return new Tuple<string, Dictionary<char, double>>(resultFunction, resultVariables);
