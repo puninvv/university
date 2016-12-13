@@ -26,8 +26,6 @@
 
 
         function countFunctionValue() {
-            alert(getFormulaFromBody())
-
             $.getJSON(uri + '/' + getFormulaFromBody())
                 .done(function (data) {
                     alert(data);
