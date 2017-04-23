@@ -24,7 +24,7 @@ namespace RabbitMQConsoleClient
                 var bmp = new Bitmap(imgPath);
                 var serializer = new BytesSerializer<Bitmap>();
 
-                var task = new RabbitMQTask() { TaskType = RabbitMQTaskType.ToGrayScale, Data = serializer.ObjectToByteArray(bmp) };
+                var task = new RabbitMQTask() { TaskType = RabbitMQTaskType.DetectEdges, Data = serializer.ObjectToByteArray(bmp) };
 
                 Console.WriteLine(" [x] Requesting {0}", imgPath);
 

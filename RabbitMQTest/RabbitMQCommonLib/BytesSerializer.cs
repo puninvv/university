@@ -15,8 +15,8 @@ namespace RabbitMQCommonLib
             if (obj == null)
                 return null;
 
-            BinaryFormatter bf = new BinaryFormatter();
-            MemoryStream ms = new MemoryStream();
+            var bf = new BinaryFormatter();
+            var ms = new MemoryStream();
 
             byte[] result = null;
             try
@@ -35,8 +35,8 @@ namespace RabbitMQCommonLib
 
         public T ByteArrayToObject(byte[] arrBytes)
         {
-            MemoryStream memStream = new MemoryStream();
-            BinaryFormatter binForm = new BinaryFormatter();
+            var memStream = new MemoryStream();
+            var binForm = new BinaryFormatter();
             T result = null;
 
             try

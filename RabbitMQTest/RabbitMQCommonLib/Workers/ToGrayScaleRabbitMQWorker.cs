@@ -17,12 +17,12 @@ namespace RabbitMQCommonLib.Workers.ImageRabbitMQWorker
 
             var bitmap = serializer.ByteArrayToObject(_task.Data);
 
-            var result = MakeGrayscale3(bitmap);
+            var result = ToGrayScale(bitmap);
 
             return serializer.ObjectToByteArray(result);
         }
 
-        private static Bitmap MakeGrayscale3(Bitmap original)
+        private static Bitmap ToGrayScale(Bitmap original)
         {
             //create a blank bitmap the same size as original
             Bitmap newBitmap = new Bitmap(original.Width, original.Height);

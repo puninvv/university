@@ -15,6 +15,8 @@ namespace RabbitMQCommonLib.Workers
             {
                 case RabbitMQTaskType.ToGrayScale:
                     return new ToGrayScaleRabbitMQWorker();
+                case RabbitMQTaskType.DetectEdges:
+                    return new DetectEdgesRabbitMQWorker();
                 default:
                     return new DefaultRabbitMQWorker();
             }
