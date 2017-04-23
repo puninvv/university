@@ -15,7 +15,10 @@ namespace RabbitMQConsoleClient
     {
         static void Main(string[] args)
         {
-            using (var client = new RabbitMQClient())
+
+            var setup = Properties.Settings.Default;
+
+            using (var client = new RabbitMQClient(setup.Host, setup.User, setup.Pass, setup.Port))
             {
                 var imgPath = Console.ReadLine();
 

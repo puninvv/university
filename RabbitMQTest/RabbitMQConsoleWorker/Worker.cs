@@ -13,7 +13,9 @@ namespace RabbitMQConsoleWorker
     {
         static void Main(string[] args)
         {
-            using (var worker = new RabbitMQCommonLib.Workers.RabbitMQWorker())
+            var setup = Properties.Settings.Default;
+
+            using (var worker = new RabbitMQCommonLib.Workers.RabbitMQWorker(setup.Host, setup.User, setup.Pass, setup.Port))
             {
                 Console.WriteLine(" Press [enter] to exit.");
                 Console.ReadLine();

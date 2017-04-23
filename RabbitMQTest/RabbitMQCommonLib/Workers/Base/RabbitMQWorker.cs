@@ -17,14 +17,16 @@ namespace RabbitMQCommonLib.Workers
         private BytesSerializer<RabbitMQTask> m_taskSerializer = new BytesSerializer<RabbitMQTask>();
         private BytesSerializer<RabbitMQTaskResult> m_resultSerializer = new BytesSerializer<RabbitMQTaskResult>();
 
-        public RabbitMQWorker(string _hostName = "localhost", string _username = null, string _password = null, int _port = -1)
+        public RabbitMQWorker(string _hostName = null, string _username = null, string _password = null, int _port = -1)
         {
-            var factory = new ConnectionFactory() { HostName = _hostName };
+            var factory = new ConnectionFactory();
 
-            if (_username != null)
+            factory.HostName = string.IsNullOrEmpty(_hostName) ? "localhost" : _hostName;
+
+            if (!string.IsNullOrEmpty(_username))
                 factory.UserName = _username;
 
-            if (_password != null)
+            if (!string.IsNullOrEmpty(_password))
                 factory.Password = _password;
 
             if (_port != -1)
