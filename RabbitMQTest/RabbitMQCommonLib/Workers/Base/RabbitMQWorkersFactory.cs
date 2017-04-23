@@ -14,8 +14,10 @@ namespace RabbitMQCommonLib.Workers
             switch (_task.TaskType)
             {
                 case RabbitMQTaskType.ToGrayScale:
+                    Console.WriteLine("Task has type {0}, created ToGrayScaleWorker", _task.TaskType);
                     return new ToGrayScaleRabbitMQWorker();
                 case RabbitMQTaskType.DetectEdges:
+                    Console.WriteLine("Task has type {0}, created DetectEdgesWorker", _task.TaskType);
                     return new DetectEdgesRabbitMQWorker();
                 default:
                     return new DefaultRabbitMQWorker();

@@ -13,8 +13,10 @@ namespace RabbitMQCommonLib.Workers
         {
             var serializer = new BytesSerializer<Bitmap>();
 
+            var inputBitmap = serializer.ByteArrayToObject(_task.Data);
+
             var imgFactory = new ImageProcessor.ImageFactory();
-            var img = imgFactory.Load(_task.Data);
+            var img = imgFactory.Load(inputBitmap);
 
             var filter = new ImageProcessor.Imaging.Filters.EdgeDetection.PrewittEdgeFilter();
             var detectedEdges = img.DetectEdges(filter, true);
