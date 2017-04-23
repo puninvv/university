@@ -25,7 +25,7 @@ namespace RabbitMQConsoleWorker.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("185.181.10.119")]
         public string Host {
             get {
                 return ((string)(this["Host"]));
@@ -37,7 +37,7 @@ namespace RabbitMQConsoleWorker.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("test")]
         public string User {
             get {
                 return ((string)(this["User"]));
@@ -49,7 +49,7 @@ namespace RabbitMQConsoleWorker.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("test")]
         public string Pass {
             get {
                 return ((string)(this["Pass"]));
