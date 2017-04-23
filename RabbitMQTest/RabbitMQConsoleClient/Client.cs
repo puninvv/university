@@ -15,7 +15,6 @@ namespace RabbitMQConsoleClient
     {
         static void Main(string[] args)
         {
-
             var setup = Properties.Settings.Default;
 
             using (var client = new RabbitMQClient(setup.Host, setup.User, setup.Pass, setup.Port))
@@ -29,7 +28,7 @@ namespace RabbitMQConsoleClient
 
                 Console.WriteLine(" [x] Requesting {0}", imgPath);
 
-                var response = client.GetResponce(task);
+                var response = client.GetResponce(task, setup.Timeout);
 
                 var result = serializer.ByteArrayToObject(response.Data);
                 var newFileName = Path.GetFileNameWithoutExtension(imgPath) + "_result" + Path.GetExtension(imgPath);
