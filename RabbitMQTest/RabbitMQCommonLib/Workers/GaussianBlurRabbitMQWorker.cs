@@ -13,7 +13,7 @@ namespace RabbitMQCommonLib.Workers
     {
         protected override ImageFactory ProcessImage(ImageFactory _img)
         {
-            return _img.GaussianBlur(5);
+            return _img.GaussianBlur(20);
         }
     }
 }

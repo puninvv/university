@@ -73,6 +73,8 @@ namespace RabbitMQCommonLib.Workers
 
                 m_channel.BasicPublish(exchange: "", routingKey: props.ReplyTo, basicProperties: replyProps, body: m_resultSerializer.ObjectToByteArray(result));
                 m_channel.BasicAck(deliveryTag: e.DeliveryTag, multiple: false);
+
+                Console.WriteLine("Requested!");
             }
         }
 

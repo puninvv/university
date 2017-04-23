@@ -15,8 +15,6 @@ namespace RabbitMQConsoleClient
     {
         static void Main(string[] args)
         {
-            var rnd = new Random();
-
             using (var client = new RabbitMQClient())
             {
                 var imgPath = Console.ReadLine();
@@ -24,7 +22,7 @@ namespace RabbitMQConsoleClient
                 var bmp = new Bitmap(imgPath);
                 var serializer = new BytesSerializer<Bitmap>();
 
-                var task = new RabbitMQTask() { TaskType = RabbitMQTaskType.DetectEdges, Data = serializer.ObjectToByteArray(bmp) };
+                var task = new RabbitMQTask() { TaskType = RabbitMQTaskType.GaussianBlur, Data = serializer.ObjectToByteArray(bmp) };
 
                 Console.WriteLine(" [x] Requesting {0}", imgPath);
 
