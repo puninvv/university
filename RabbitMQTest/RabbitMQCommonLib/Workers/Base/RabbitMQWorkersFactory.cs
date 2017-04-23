@@ -19,6 +19,9 @@ namespace RabbitMQCommonLib.Workers
                 case RabbitMQTaskType.DetectEdges:
                     Console.WriteLine("Task has type {0}, created DetectEdgesWorker", _task.TaskType);
                     return new DetectEdgesRabbitMQWorker();
+                case RabbitMQTaskType.GaussianBlur:
+                    Console.WriteLine("Task has type {0}, created GaussianBlurWorker", _task.TaskType);
+                    return new GaussianBlurRabbitMQWorker();
                 default:
                     return new DefaultRabbitMQWorker();
             }

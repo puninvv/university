@@ -25,6 +25,7 @@ namespace RabbitMQCommonLib
     public enum RabbitMQTaskType
     {
         ToGrayScale,
-        DetectEdges
+        DetectEdges,
+        GaussianBlur
     }
 }

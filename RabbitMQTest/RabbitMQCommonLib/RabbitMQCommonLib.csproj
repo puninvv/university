@@ -50,10 +50,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Client\RabbitMQClient.cs" />
+    <Compile Include="Helpers\ImageProcessingHelper.cs" />
     <Compile Include="RabbitMQTask.cs" />
     <Compile Include="RabbitMQTaskResult.cs" />
     <Compile Include="Workers\Base\IRabbitMQWorker.cs" />
     <Compile Include="Workers\DefaultRabbitMQWorker.cs" />
+    <Compile Include="Workers\GaussianBlurRabbitMQWorker.cs" />
     <Compile Include="Workers\DetectEdgesRabbitMQWorker.cs" />
     <Compile Include="Workers\ToGrayScaleRabbitMQWorker.cs" />
     <Compile Include="Workers\Base\RabbitMQWorkersFactory.cs" />

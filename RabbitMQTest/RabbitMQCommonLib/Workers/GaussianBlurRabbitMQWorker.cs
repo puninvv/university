@@ -9,12 +9,11 @@ using ImageProcessor;
 
 namespace RabbitMQCommonLib.Workers
 {
-    internal class DetectEdgesRabbitMQWorker : ImageProcessingHelper
+    internal class GaussianBlurRabbitMQWorker : ImageProcessingHelper
     {
         protected override ImageFactory ProcessImage(ImageFactory _img)
         {
-            var filter = new ImageProcessor.Imaging.Filters.EdgeDetection.PrewittEdgeFilter();
-            return _img.DetectEdges(filter, true);
+            return _img.GaussianBlur(5);
         }
     }
 }
