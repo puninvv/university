@@ -9,14 +9,14 @@ using System.Threading.Tasks;
 
 namespace RabbitMQCommonLib.Client
 {
-    public abstract class RabbitMQClientBase : IDisposable
+    public class RabbitMQClient : IDisposable
     {
         private IConnection m_connection;
         private IModel m_channel;
         private string m_replyQueueName;
         private QueueingBasicConsumer m_consumer;
 
-        public RabbitMQClientBase(string _hostName = "localhost", string _username = null, string _password = null, int _port = -1)
+        public RabbitMQClient(string _hostName = "localhost", string _username = null, string _password = null, int _port = -1)
         {
             var factory = new ConnectionFactory() { HostName = _hostName };
 
@@ -60,6 +60,17 @@ namespace RabbitMQCommonLib.Client
             }
         }
 
+        public RabbitMQTask GetResponce(RabbitMQTask _task, int _timeout = 10000)
+        {
+            var serializer = new BytesSerializer<RabbitMQTask>();
+
+            var requestBytes = serializer.ObjectToByteArray(_task);
+
+            var responce = SendRequest(requestBytes, _timeout);
+
+            return serializer.ByteArrayToObject(responce);
+        }
+
         #region IDisposable Support
         private bool disposedValue = false; // Для определения избыточных вызовов
 
@@ -80,7 +91,7 @@ namespace RabbitMQCommonLib.Client
             }
         }
 
-        ~RabbitMQClientBase()
+        ~RabbitMQClient()
         {
             Dispose(false);
         }

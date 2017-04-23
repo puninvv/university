@@ -4,7 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using RabbitMQCommonLib.Workers.UserRabbitMQWorker;
+using RabbitMQCommonLib.Client;
+using System.Drawing;
+using RabbitMQCommonLib;
+using System.IO;
 
 namespace RabbitMQConsoleClient
 {
@@ -14,15 +17,31 @@ namespace RabbitMQConsoleClient
         {
             var rnd = new Random();
 
-            Console.ReadKey();
-
-            using (var client = new RabbitMQCommonLib.Client.UserRabbitMQClient.UserRabbitMQClient())
+            using (var client = new RabbitMQClient())
             {
-                var user = new User() { Name = Guid.NewGuid().ToString(), Age = rnd.Next(10, 100) };
-                Console.WriteLine(" [x] Requesting pair for user {0}", user);
+                var imgPath = Console.ReadLine();
 
-                var response = client.GetResponce(user);
-                Console.WriteLine(" [.] Got '{0}'", response);
+                var bmp = new Bitmap(imgPath);
+                var serializer = new BytesSerializer<Bitmap>();
+
+                var task = new RabbitMQTask() { TaskType = RabbitMQTaskType.ToPng, Data = serializer.ObjectToByteArray(bmp) };
+
+                Console.WriteLine(" [x] Requesting {0}", imgPath);
+
+                var response = client.GetResponce(task);
+
+                var result = serializer.ByteArrayToObject(response.Data);
+
+                var newFileName = Path.GetFileNameWithoutExtension(imgPath) + "_result" + Path.GetExtension(imgPath);
+
+                var resultPath = Path.Combine(Path.GetDirectoryName(imgPath), newFileName);
+                
+                result.Save(resultPath);
+
+                bmp.Dispose();
+                result.Dispose();
+
+                Console.WriteLine(" [.] Got {0}", resultPath);
             }
 
             Console.WriteLine(" Press [enter] to exit.");

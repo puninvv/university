@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RabbitMQCommonLib.Client
+namespace RabbitMQCommonLib.Workers
 {
-    public interface IClient<T>
+    internal interface IRabbitMQWorker
     {
-        T GetResponce(T _data, int _timeout = 10000);
+        byte[] ProcessTask(RabbitMQTask _task);
     }
 }

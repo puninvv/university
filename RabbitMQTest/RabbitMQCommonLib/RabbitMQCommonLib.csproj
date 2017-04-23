@@ -44,14 +44,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Client\IClient.cs" />
-    <Compile Include="Client\RabbitMQClientBase.cs" />
-    <Compile Include="Client\UserRabbitMQClient\UserRabbitMQClient.cs" />
-    <Compile Include="Workers\UserRabbitMQWorker\User.cs" />
+    <Compile Include="Client\RabbitMQClient.cs" />
+    <Compile Include="RabbitMQTask.cs" />
+    <Compile Include="Workers\Base\IRabbitMQWorker.cs" />
+    <Compile Include="Workers\DefaultRabbitMQWorker.cs" />
+    <Compile Include="Workers\ToPngRabbitMQWorker.cs" />
+    <Compile Include="Workers\Base\RabbitMQWorkersFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="BytesSerializer.cs" />
-    <Compile Include="Workers\RabbitMQWorkerBase.cs" />
-    <Compile Include="Workers\UserRabbitMQWorker\UserRabbitMQWorker.cs" />
+    <Compile Include="Workers\Base\RabbitMQWorker.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

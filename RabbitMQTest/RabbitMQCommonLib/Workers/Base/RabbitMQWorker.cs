@@ -9,13 +9,14 @@ using RabbitMQCommonLib;
 
 namespace RabbitMQCommonLib.Workers
 {
-    public abstract class RabbitMQWorkerBase : IDisposable
+    public class RabbitMQWorker : IDisposable
     {
         private IConnection m_connection;
         private IModel m_channel;
         private EventingBasicConsumer m_consumer;
+        private BytesSerializer<RabbitMQTask> m_serializer = new BytesSerializer<RabbitMQTask>();
 
-        public RabbitMQWorkerBase(string _hostName = "localhost", string _username = null, string _password = null, int _port = -1)
+        public RabbitMQWorker(string _hostName = "localhost", string _username = null, string _password = null, int _port = -1)
         {
             var factory = new ConnectionFactory() { HostName = _hostName };
 
@@ -52,21 +53,27 @@ namespace RabbitMQCommonLib.Workers
 
             try
             {
-                responseBytes = ProcessRequest(body);
+                var task = m_serializer.ByteArrayToObject(body);
+
+                var worker = RabbitMQWorkersFactory.GetWorker(task);
+
+                responseBytes = worker.ProcessTask(task);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(" [.] " + ex.Message);
-                responseBytes = new byte[0];
+                responseBytes = null;
             }
             finally
             {
-                m_channel.BasicPublish(exchange: "", routingKey: props.ReplyTo, basicProperties: replyProps, body: responseBytes);
+                var result = new RabbitMQTask();
+                result.TaskType = responseBytes == null ? RabbitMQTaskType.Failed : RabbitMQTaskType.Success;
+                result.Data = responseBytes == null ? new byte[0] : responseBytes;
+
+                m_channel.BasicPublish(exchange: "", routingKey: props.ReplyTo, basicProperties: replyProps, body: m_serializer.ObjectToByteArray(result));
                 m_channel.BasicAck(deliveryTag: e.DeliveryTag, multiple: false);
             }
         }
-
-        protected abstract byte[] ProcessRequest(byte[] _message);
 
         #region IDisposable Support
         private bool disposedValue = false;

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace RabbitMQCommonLib
 {
-    internal class BytesSerializer<T> where T : class
+    public class BytesSerializer<T> where T : class
     {
         public byte[] ObjectToByteArray(T obj)
         {

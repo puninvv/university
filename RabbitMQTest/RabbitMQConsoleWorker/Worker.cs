@@ -13,7 +13,7 @@ namespace RabbitMQConsoleWorker
     {
         static void Main(string[] args)
         {
-            using (var worker = new RabbitMQCommonLib.Workers.UserRabbitMQWorker.UserRabbitMQWorker())
+            using (var worker = new RabbitMQCommonLib.Workers.RabbitMQWorker())
             {
                 Console.WriteLine(" Press [enter] to exit.");
                 Console.ReadLine();

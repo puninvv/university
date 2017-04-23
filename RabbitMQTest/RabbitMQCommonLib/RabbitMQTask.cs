@@ -4,26 +4,30 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RabbitMQCommonLib.Workers.UserRabbitMQWorker
+namespace RabbitMQCommonLib
 {
     [Serializable]
-    public class User
+    public class RabbitMQTask
     {
-        public string Name
+        public RabbitMQTaskType TaskType
         {
             get;
             set;
         }
-
-        public int Age
+        
+        public byte[] Data
         {
             get;
             set;
         }
+    }
 
-        public override string ToString()
-        {
-            return "{User: Name=" + Name + "; Age=" + Age + "}";
-        }
+    public enum RabbitMQTaskType
+    {
+        ToJpg,
+        ToBmp,
+        ToPng,
+        Success,
+        Failed
     }
 }
