@@ -24,18 +24,16 @@ namespace RabbitMQConsoleClient
                 var bmp = new Bitmap(imgPath);
                 var serializer = new BytesSerializer<Bitmap>();
 
-                var task = new RabbitMQTask() { TaskType = RabbitMQTaskType.ToPng, Data = serializer.ObjectToByteArray(bmp) };
+                var task = new RabbitMQTask() { TaskType = RabbitMQTaskType.ToGrayScale, Data = serializer.ObjectToByteArray(bmp) };
 
                 Console.WriteLine(" [x] Requesting {0}", imgPath);
 
                 var response = client.GetResponce(task);
 
                 var result = serializer.ByteArrayToObject(response.Data);
-
                 var newFileName = Path.GetFileNameWithoutExtension(imgPath) + "_result" + Path.GetExtension(imgPath);
-
                 var resultPath = Path.Combine(Path.GetDirectoryName(imgPath), newFileName);
-                
+
                 result.Save(resultPath);
 
                 bmp.Dispose();

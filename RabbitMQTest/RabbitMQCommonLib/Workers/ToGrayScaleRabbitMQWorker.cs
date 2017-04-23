@@ -7,7 +7,7 @@ using RabbitMQCommonLib.Workers;
 
 namespace RabbitMQCommonLib.Workers.ImageRabbitMQWorker
 {
-    internal class ToPngRabbitMQWorker : IRabbitMQWorker
+    internal class ToGrayScaleRabbitMQWorker : IRabbitMQWorker
     {
         public byte[] ProcessTask(RabbitMQTask _task)
         {

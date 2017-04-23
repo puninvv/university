@@ -13,8 +13,8 @@ namespace RabbitMQCommonLib.Workers
         {
             switch (_task.TaskType)
             {
-                case RabbitMQTaskType.ToPng:
-                    return new ToPngRabbitMQWorker();
+                case RabbitMQTaskType.ToGrayScale:
+                    return new ToGrayScaleRabbitMQWorker();
                 default:
                     return new DefaultRabbitMQWorker();
             }

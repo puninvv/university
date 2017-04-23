@@ -14,7 +14,8 @@ namespace RabbitMQCommonLib.Workers
         private IConnection m_connection;
         private IModel m_channel;
         private EventingBasicConsumer m_consumer;
-        private BytesSerializer<RabbitMQTask> m_serializer = new BytesSerializer<RabbitMQTask>();
+        private BytesSerializer<RabbitMQTask> m_taskSerializer = new BytesSerializer<RabbitMQTask>();
+        private BytesSerializer<RabbitMQTaskResult> m_resultSerializer = new BytesSerializer<RabbitMQTaskResult>();
 
         public RabbitMQWorker(string _hostName = "localhost", string _username = null, string _password = null, int _port = -1)
         {
@@ -53,7 +54,7 @@ namespace RabbitMQCommonLib.Workers
 
             try
             {
-                var task = m_serializer.ByteArrayToObject(body);
+                var task = m_taskSerializer.ByteArrayToObject(body);
 
                 var worker = RabbitMQWorkersFactory.GetWorker(task);
 
@@ -66,11 +67,11 @@ namespace RabbitMQCommonLib.Workers
             }
             finally
             {
-                var result = new RabbitMQTask();
-                result.TaskType = responseBytes == null ? RabbitMQTaskType.Failed : RabbitMQTaskType.Success;
+                var result = new RabbitMQTaskResult();
+                result.ResultType = responseBytes == null ? RabbitMQTaskResultType.Failed : RabbitMQTaskResultType.Success;
                 result.Data = responseBytes == null ? new byte[0] : responseBytes;
 
-                m_channel.BasicPublish(exchange: "", routingKey: props.ReplyTo, basicProperties: replyProps, body: m_serializer.ObjectToByteArray(result));
+                m_channel.BasicPublish(exchange: "", routingKey: props.ReplyTo, basicProperties: replyProps, body: m_resultSerializer.ObjectToByteArray(result));
                 m_channel.BasicAck(deliveryTag: e.DeliveryTag, multiple: false);
             }
         }

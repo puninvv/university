@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 namespace RabbitMQCommonLib
 {
     [Serializable]
-    public class RabbitMQTask
+    public class RabbitMQTaskResult
     {
-        public RabbitMQTaskType TaskType
+        public RabbitMQTaskResultType ResultType
         {
             get;
             set;
         }
-        
+
         public byte[] Data
         {
             get;
@@ -22,8 +22,9 @@ namespace RabbitMQCommonLib
         }
     }
 
-    public enum RabbitMQTaskType
+    public enum RabbitMQTaskResultType
     {
-        ToGrayScale
+        Success,
+        Failed
     }
 }

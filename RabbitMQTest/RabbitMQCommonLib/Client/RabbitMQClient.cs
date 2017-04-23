@@ -60,15 +60,15 @@ namespace RabbitMQCommonLib.Client
             }
         }
 
-        public RabbitMQTask GetResponce(RabbitMQTask _task, int _timeout = 10000)
+        public RabbitMQTaskResult GetResponce(RabbitMQTask _task, int _timeout = 10000)
         {
-            var serializer = new BytesSerializer<RabbitMQTask>();
-
-            var requestBytes = serializer.ObjectToByteArray(_task);
+            var taskSerializer = new BytesSerializer<RabbitMQTask>();
+            var requestBytes = taskSerializer.ObjectToByteArray(_task);
 
             var responce = SendRequest(requestBytes, _timeout);
 
-            return serializer.ByteArrayToObject(responce);
+            var resultSerializer = new BytesSerializer<RabbitMQTaskResult>();
+            return resultSerializer.ByteArrayToObject(responce);
         }
 
         #region IDisposable Support
