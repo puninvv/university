@@ -24,7 +24,9 @@ namespace RabbitMQConsoleClient
                 var bmp = new Bitmap(imgPath);
                 var serializer = new BytesSerializer<Bitmap>();
 
-                var task = new RabbitMQTask() { TaskType = RabbitMQTaskType.GaussianBlur, Data = serializer.ObjectToByteArray(bmp) };
+                client.OnTaskProcessed += Client_OnTaskProcessed;
+
+                var task = new RabbitMQMessage(serializer.ObjectToByteArray(bmp), RabbitMQTaskType.GaussianBlur, RabbitMQTaskType.DetectEdges);
 
                 Console.WriteLine(" [x] Requesting {0}", imgPath);
 
@@ -44,6 +46,11 @@ namespace RabbitMQConsoleClient
 
             Console.WriteLine(" Press [enter] to exit.");
             Console.ReadLine();
+        }
+
+        private static void Client_OnTaskProcessed(object sender, RabbitMQClient.RabbitMQClientEventArgs e)
+        {
+            Console.WriteLine(e.ToString());
         }
     }
 }

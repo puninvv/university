@@ -9,21 +9,22 @@ namespace RabbitMQCommonLib.Workers
 {
     internal static class RabbitMQWorkersFactory
     {
-        public static IRabbitMQWorker GetWorker(RabbitMQTask _task)
+        public static IRabbitMQWorker GetWorker(RabbitMQTaskType _taskType)
         {
-            switch (_task.TaskType)
+            switch (_taskType)
             {
                 case RabbitMQTaskType.ToGrayScale:
-                    Console.WriteLine("Task has type {0}, created ToGrayScaleWorker", _task.TaskType);
+                    Console.WriteLine("Task has type {0}, created ToGrayScaleWorker", _taskType);
                     return new ToGrayScaleRabbitMQWorker();
                 case RabbitMQTaskType.DetectEdges:
-                    Console.WriteLine("Task has type {0}, created DetectEdgesWorker", _task.TaskType);
+                    Console.WriteLine("Task has type {0}, created DetectEdgesWorker", _taskType);
                     return new DetectEdgesRabbitMQWorker();
                 case RabbitMQTaskType.GaussianBlur:
-                    Console.WriteLine("Task has type {0}, created GaussianBlurWorker", _task.TaskType);
+                    Console.WriteLine("Task has type {0}, created GaussianBlurWorker", _taskType);
                     return new GaussianBlurRabbitMQWorker();
                 default:
-                    return new DefaultRabbitMQWorker();
+                    Console.WriteLine("Cannot create worker for task type {0}", _taskType);
+                    return null;
             }
         }
     }

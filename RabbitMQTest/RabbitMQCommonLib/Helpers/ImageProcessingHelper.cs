@@ -11,11 +11,11 @@ namespace RabbitMQCommonLib.Helpers
 {
     internal abstract class ImageProcessingHelper : IRabbitMQWorker
     {
-        public byte[] ProcessTask(RabbitMQTask _task)
+        public byte[] ProcessTask(byte[] _data)
         {
             var serializer = new BytesSerializer<Bitmap>();
 
-            var inputBitmap = serializer.ByteArrayToObject(_task.Data);
+            var inputBitmap = serializer.ByteArrayToObject(_data);
 
             var imgFactory = new ImageFactory();
             var img = imgFactory.Load(inputBitmap);

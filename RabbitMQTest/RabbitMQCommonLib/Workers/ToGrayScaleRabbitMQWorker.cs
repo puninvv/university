@@ -11,11 +11,11 @@ namespace RabbitMQCommonLib.Workers.ImageRabbitMQWorker
 {
     internal class ToGrayScaleRabbitMQWorker : IRabbitMQWorker
     {
-        public byte[] ProcessTask(RabbitMQTask _task)
+        public byte[] ProcessTask(byte[] _data)
         {
             var serializer = new BytesSerializer<Bitmap>();
 
-            var bitmap = serializer.ByteArrayToObject(_task.Data);
+            var bitmap = serializer.ByteArrayToObject(_data);
 
             var result = ToGrayScale(bitmap);
 
@@ -24,13 +24,10 @@ namespace RabbitMQCommonLib.Workers.ImageRabbitMQWorker
 
         private static Bitmap ToGrayScale(Bitmap original)
         {
-            //create a blank bitmap the same size as original
             Bitmap newBitmap = new Bitmap(original.Width, original.Height);
 
-            //get a graphics object from the new image
             Graphics g = Graphics.FromImage(newBitmap);
 
-            //create the grayscale ColorMatrix
             ColorMatrix colorMatrix = new ColorMatrix(
                new float[][]
                {
@@ -41,18 +38,13 @@ namespace RabbitMQCommonLib.Workers.ImageRabbitMQWorker
                  new float[] {0, 0, 0, 0, 1}
                });
 
-            //create some image attributes
             ImageAttributes attributes = new ImageAttributes();
 
-            //set the color matrix attribute
             attributes.SetColorMatrix(colorMatrix);
 
-            //draw the original image on the new image
-            //using the grayscale color matrix
             g.DrawImage(original, new Rectangle(0, 0, original.Width, original.Height),
                0, 0, original.Width, original.Height, GraphicsUnit.Pixel, attributes);
 
-            //dispose the Graphics object
             g.Dispose();
             return newBitmap;
         }

@@ -8,6 +8,6 @@ namespace RabbitMQCommonLib.Workers
 {
     internal interface IRabbitMQWorker
     {
-        byte[] ProcessTask(RabbitMQTask _task);
+        byte[] ProcessTask(byte[] _data);
     }
 }
