@@ -103,6 +103,11 @@ namespace RabbitMQCommonLib.Workers
             }
         }
 
+        public void DropQueue(string _queueName)
+        {
+            m_channel.QueueDelete(_queueName,true, true);
+        }
+
         #region IDisposable Support
         private bool disposedValue = false;
 

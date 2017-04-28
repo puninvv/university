@@ -16,12 +16,14 @@ namespace RabbitMQWinFormsClient
         public UCEnd()
         {
             InitializeComponent();
+            Cursor = Cursors.Arrow;
         }
 
         public void SetupImage(Image _img)
         {
             pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
             pictureBox1.Image = _img;
+            Cursor = Cursors.Hand;
         }
 
         private void pictureBox1_Click(object sender, EventArgs e)
@@ -35,6 +37,7 @@ namespace RabbitMQWinFormsClient
                     pictureBox1.Image.Save(dlg.FileName);
 
                     this.BackColor = Color.Green;
+                    Cursor = Cursors.Arrow;
                 }
             }
 

@@ -49,6 +49,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.DarkRed;
             this.Controls.Add(this.pictureBox1);
+            this.Cursor = System.Windows.Forms.Cursors.Hand;
             this.Margin = new System.Windows.Forms.Padding(20);
             this.Name = "UCEnd";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();

@@ -32,6 +32,7 @@ namespace RabbitMQWinFormsClient
         public UCStart()
         {
             InitializeComponent();
+            Cursor = Cursors.Hand;
         }
 
         public void ChangeBackGround(Color _color)
@@ -60,11 +61,11 @@ namespace RabbitMQWinFormsClient
                     if (OnCorrectlyInitialized != null)
                         OnCorrectlyInitialized(this, new UCStartEventArgs(dlg.FileName));
 
+                    pictureBox1.Enabled = false;
                     this.BackColor = Color.Green;
+                    Cursor = Cursors.Arrow;
                 }
             }
-
-            pictureBox1.Enabled = false;
         }
     }
 }
