@@ -63,36 +63,41 @@ namespace RabbitMQCommonLib.Client
             m_queueName = _queueName ?? Properties.Settings.Default.DefaultQueueName;
 
             m_connection = factory.CreateConnection();
+            m_channel = m_connection.CreateModel();
+
             m_replyQueueName = m_channel.QueueDeclare().QueueName;
             m_consumer = new QueueingBasicConsumer(m_channel);
             m_channel.BasicConsume(queue: m_replyQueueName, noAck: true, consumer: m_consumer);
         }
 
-        protected byte[] SendRequest(byte[] _request, int _timeout = 10000)
+        protected void SendRequest(byte[] _request, string _corrId)
         {
-            var corrId = Guid.NewGuid().ToString();
             var props = m_channel.CreateBasicProperties();
             props.ReplyTo = m_replyQueueName;
-            props.CorrelationId = corrId;
+            props.CorrelationId = _corrId;
 
             m_channel.BasicPublish(exchange: "", routingKey: m_queueName, basicProperties: props, body: _request);
-            
+        }
+
+        protected byte[] WaitForNextRequest(string _corrId, int _timeout = 10000)
+        {
             var timeStart = DateTime.Now;
 
             while (true)
             {
                 var eventArgs = m_consumer.Queue.Dequeue();
-                if (eventArgs.BasicProperties.CorrelationId.Equals(corrId))
+                if (eventArgs.BasicProperties.CorrelationId.Equals(_corrId))
                     return eventArgs.Body;
 
-                Thread.Sleep(100);
+                Thread.Sleep(1000);
 
                 if (((DateTime.Now) - timeStart).Milliseconds > _timeout)
                     return null;
             }
         }
 
-        public RabbitMQMessage GetResponce(RabbitMQMessage _tasks, int _timeout = 20000)
+
+        public RabbitMQMessage GetResponce(RabbitMQMessage _tasks, Guid _corrId, int _timeout = 10000)
         {
             var tasksCount = _tasks.Tasks.Count;
             var completedTasksCount = 0;
@@ -102,10 +107,11 @@ namespace RabbitMQCommonLib.Client
 
             var startTime = DateTime.Now;
 
+            SendRequest(requestBytes, _corrId.ToString());
 
             while ((DateTime.Now - startTime).Milliseconds < _timeout)
             {
-                var responce = SendRequest(requestBytes, _timeout);
+                var responce = WaitForNextRequest(_corrId.ToString(), _timeout);
                 var resultSerializer = new BytesSerializer<RabbitMQMessage>();
                 var taskResult = resultSerializer.ByteArrayToObject(responce);
 

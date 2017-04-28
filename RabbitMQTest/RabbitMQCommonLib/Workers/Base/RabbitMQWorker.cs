@@ -58,6 +58,7 @@ namespace RabbitMQCommonLib.Workers
             var props = e.BasicProperties;
             var replyProps = m_channel.CreateBasicProperties();
             replyProps.CorrelationId = props.CorrelationId;
+            replyProps.ReplyTo = props.ReplyTo;
 
             var resultBytes = e.Body;
             var resultType = RabbitMQTaskResultType.Undefined;

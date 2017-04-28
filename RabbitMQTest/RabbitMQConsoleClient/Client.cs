@@ -26,11 +26,11 @@ namespace RabbitMQConsoleClient
 
                 client.OnTaskProcessed += Client_OnTaskProcessed;
 
-                var task = new RabbitMQMessage(serializer.ObjectToByteArray(bmp), RabbitMQTaskType.GaussianBlur, RabbitMQTaskType.DetectEdges);
+                var task = new RabbitMQMessage(serializer.ObjectToByteArray(bmp), RabbitMQTaskType.ToGrayScale, RabbitMQTaskType.DetectEdges);
 
                 Console.WriteLine(" [x] Requesting {0}", imgPath);
 
-                var response = client.GetResponce(task, setup.Timeout);
+                var response = client.GetResponce(task, Guid.NewGuid(), setup.Timeout);
 
                 var result = serializer.ByteArrayToObject(response.Data);
                 var newFileName = Path.GetFileNameWithoutExtension(imgPath) + "_result" + Path.GetExtension(imgPath);
