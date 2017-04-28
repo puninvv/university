@@ -44,7 +44,7 @@ namespace RabbitMQCommonLib
             Tasks.Enqueue(_task);
         }
 
-        internal RabbitMQMessage(byte[] _data, Queue<RabbitMQTask> _tasks)
+        public RabbitMQMessage(byte[] _data, Queue<RabbitMQTask> _tasks)
         {
             Data = _data;
             Tasks = _tasks;
@@ -79,6 +79,12 @@ namespace RabbitMQCommonLib
             Id = Guid.NewGuid();
             TaskType = _type;
             ResultType = RabbitMQTaskResultType.Undefined;
+        }
+
+        public RabbitMQTask(RabbitMQTaskType _type, Guid _id)
+            :this (_type)
+        {
+            Id = _id;
         }
     }
 

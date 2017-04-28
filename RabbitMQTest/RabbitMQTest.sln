@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RabbitMQConsoleWorker", "Ra
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RabbitMQCommonLib", "RabbitMQCommonLib\RabbitMQCommonLib.csproj", "{9E0F3654-7618-4D35-A988-D88E63041754}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RabbitMQWinFormsClient", "RabbitMQWinFormsClient\RabbitMQWinFormsClient.csproj", "{7B2C889C-6933-4236-9F6C-B91B39031A39}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{9E0F3654-7618-4D35-A988-D88E63041754}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9E0F3654-7618-4D35-A988-D88E63041754}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9E0F3654-7618-4D35-A988-D88E63041754}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B2C889C-6933-4236-9F6C-B91B39031A39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B2C889C-6933-4236-9F6C-B91B39031A39}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B2C889C-6933-4236-9F6C-B91B39031A39}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B2C889C-6933-4236-9F6C-B91B39031A39}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
