@@ -1,0 +1,15 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Dota2CommonLib.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="ImagesFolder" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Content\Images\</Value>
+    </Setting>
+    <Setting Name="ImagesFolderHeroes" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Content\Images\Heroes\</Value>
+    </Setting>
+    <Setting Name="ImagesFolderItems" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Content\Images\Items\</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
