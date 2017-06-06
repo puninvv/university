@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace Dota2CommonLib.Items
 {
     [DataContract]
-    public class Item
+    public class Item : PictureContainerBase
     {
         [DataMember(Name = "id")]
         public int Id { get; set; }
@@ -35,41 +35,47 @@ namespace Dota2CommonLib.Items
         [DataMember(Name = "localized_name")]
         public string LocalizedName { get; set; }
 
-        [DataMember(Name = "picture", IsRequired = false)]
-        public Image Picture
+        protected override string ItemName
         {
-            get { return GetImage(ImageType.Large); }
-            set { }
+            get
+            {
+                return Name.Replace("item_", "").Replace("recipe_", "");
+            }
+            set
+            {
+            }
         }
 
-        private Image GetImage(ImageType _imageType)
+        protected override string CacheFolder
         {
-            var itemNameWithSuffix = Name.Replace("item_", "").Replace("recipe_", "");
-
-            itemNameWithSuffix += ImageTypeToString.ToString(_imageType);
-
-            if (!Directory.Exists(Properties.Settings.Default.ImagesFolderItems))
-                Directory.CreateDirectory(Properties.Settings.Default.ImagesFolderItems);
-
-            string localFilename = Properties.Settings.Default.ImagesFolderItems + itemNameWithSuffix;
-
-            if (File.Exists(localFilename))
-                return Image.FromFile(localFilename);
-
-            var url = @"http://cdn.dota2.com/apps/dota2/images/items/" + itemNameWithSuffix;
-
-            try
+            get
             {
-                using (WebClient client = new WebClient())
-                    client.DownloadFile(url, localFilename);
-
-                return Image.FromFile(localFilename);
+                return Properties.Settings.Default.ImagesFolderItems;
             }
-            catch (Exception ex)
+            set
             {
-                System.Diagnostics.Debug.WriteLine(url);
-                System.Diagnostics.Debug.WriteLine(ex);
-                return null;
+            }
+        }
+
+        protected override string BaseURI
+        {
+            get
+            {
+                return @"http://cdn.dota2.com/apps/dota2/images/items/";
+            }
+            set
+            {
+            }
+        }
+
+        protected override ImageType PictureType
+        {
+            get
+            {
+                return ImageType.Large;
+            }
+            set
+            {
             }
         }
     }

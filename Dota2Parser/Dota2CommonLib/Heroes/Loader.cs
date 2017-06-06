@@ -23,10 +23,7 @@ namespace Dota2CommonLib.Heroes
                 using (var response = request.GetResponse() as HttpWebResponse)
                 {
                     if (response.StatusCode != HttpStatusCode.OK)
-                        throw new Exception(String.Format(
-                        "Server error (HTTP {0}: {1}).",
-                        response.StatusCode,
-                        response.StatusDescription));
+                        throw new Exception(String.Format( "Server error (HTTP {0}: {1}).", response.StatusCode, response.StatusDescription));
 
                     var jsonSerializer = new DataContractJsonSerializer(typeof(Response));
                     var objResponse = jsonSerializer.ReadObject(response.GetResponseStream());
@@ -37,7 +34,7 @@ namespace Dota2CommonLib.Heroes
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                System.Diagnostics.Debug.WriteLine(e.Message);
                 return null;
             }
         }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Dota2CommonLib.Common
 {
-    internal enum ImageType
+    public enum ImageType
     {
         Small,
         Large,

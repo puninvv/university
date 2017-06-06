@@ -12,7 +12,7 @@ using Dota2CommonLib.Common;
 namespace Dota2CommonLib.Heroes
 {
     [DataContract]
-    public class Hero
+    public class Hero : PictureContainerBase
     {
         [DataMember(Name = "name")]
         public string Name
@@ -32,41 +32,49 @@ namespace Dota2CommonLib.Heroes
             get; set;
         }
 
-        [DataMember(Name = "picture", IsRequired = false)]
-        public Image Picture
+        protected override string ItemName
         {
-            get { return GetImage(ImageType.FullVertical); }
-            set { }
+            get
+            {
+                return Name.Replace("npc_dota_hero_", "");
+            }
+            set
+            {
+            }
         }
 
-        private Image GetImage(ImageType _imageType)
+        protected override string CacheFolder
         {
-            var heronameWithSuffix = Name.Replace("npc_dota_hero_", "");
-
-            heronameWithSuffix += ImageTypeToString.ToString(_imageType);
-
-            if (!Directory.Exists(Properties.Settings.Default.ImagesFolderHeroes))
-                Directory.CreateDirectory(Properties.Settings.Default.ImagesFolderHeroes);
-
-            string localFilename = Properties.Settings.Default.ImagesFolderHeroes + heronameWithSuffix;
-
-            if (File.Exists(localFilename))
-                return Image.FromFile(localFilename);
-
-            var url = @"http://cdn.dota2.com/apps/dota2/images/heroes/" + heronameWithSuffix;
-
-            try
+            get
             {
-                using (WebClient client = new WebClient())
-                    client.DownloadFile(url, localFilename);
-
-                return Image.FromFile(localFilename);
+                return Properties.Settings.Default.ImagesFolderHeroes;
             }
-            catch (Exception ex)
+            set
             {
-                System.Diagnostics.Debug.WriteLine(url);
-                System.Diagnostics.Debug.WriteLine(ex);
-                return null;
+            }
+        }
+
+        protected override string BaseURI
+        {
+            get
+            {
+                return @"http://cdn.dota2.com/apps/dota2/images/heroes/";
+            }
+            set
+            {
+            }
+        }
+
+        protected override ImageType PictureType
+        {
+            get
+            {
+                return ImageType.FullVertical;
+            }
+
+            set
+            {
+                
             }
         }
     }
