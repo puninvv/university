@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Dota2CommonLib.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -15,12 +16,13 @@ namespace Dota2CommonLib.Heroes
         {
             get; set;
         }
+
         [DataMember(Name = "status")]
         public int Status
         {
             get; set;
         }
-        [DataMember(Name = "count")]
+        [DataMember(Name = "count", IsRequired = false)]
         public string Count
         {
             get; set;
