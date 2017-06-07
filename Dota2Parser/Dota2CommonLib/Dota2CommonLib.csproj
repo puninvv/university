@@ -53,6 +53,10 @@
     <Compile Include="Items\Loader.cs" />
     <Compile Include="Items\Response.cs" />
     <Compile Include="Items\Result.cs" />
+    <Compile Include="Matches\Match.cs" />
+    <Compile Include="Matches\Player.cs" />
+    <Compile Include="Matches\Response.cs" />
+    <Compile Include="Matches\Result.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
