@@ -32,6 +32,7 @@ namespace Dota2CommonLib.Heroes
             get; set;
         }
 
+        [IgnoreDataMember]
         protected override string ItemName
         {
             get
@@ -43,6 +44,7 @@ namespace Dota2CommonLib.Heroes
             }
         }
 
+        [IgnoreDataMember]
         protected override string CacheFolder
         {
             get
@@ -54,6 +56,7 @@ namespace Dota2CommonLib.Heroes
             }
         }
 
+        [IgnoreDataMember]
         protected override string BaseURI
         {
             get
@@ -65,6 +68,7 @@ namespace Dota2CommonLib.Heroes
             }
         }
 
+        [IgnoreDataMember]
         protected override ImageType PictureType
         {
             get

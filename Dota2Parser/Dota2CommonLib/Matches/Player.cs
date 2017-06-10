@@ -12,7 +12,7 @@ namespace Dota2CommonLib.Matches
     {
         ///<summary>32-bit Steam account ID for the player</summary>
         [DataMember(Name = "account_id")]
-        public int AccountId
+        public UInt32 AccountId
         {
             get;
             set;
@@ -20,7 +20,7 @@ namespace Dota2CommonLib.Matches
 
         ///<summary>8-bit unsigned integer representing the player's team and position in the team</summary>
         [DataMember(Name = "player_slot")]
-        public int PlayerSlot
+        public uint PlayerSlot
         {
             get;
             set;
@@ -32,6 +32,15 @@ namespace Dota2CommonLib.Matches
         {
             get;
             set;
+        }
+
+        [IgnoreDataMember]
+        public bool IsRadiant
+        {
+            get
+            {
+                return (PlayerSlot & 0x80) == 0x80;
+            }
         }
     }
 }

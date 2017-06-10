@@ -35,6 +35,7 @@ namespace Dota2CommonLib.Items
         [DataMember(Name = "localized_name")]
         public string LocalizedName { get; set; }
 
+        [IgnoreDataMember]
         protected override string ItemName
         {
             get
@@ -46,6 +47,7 @@ namespace Dota2CommonLib.Items
             }
         }
 
+        [IgnoreDataMember]
         protected override string CacheFolder
         {
             get
@@ -57,6 +59,7 @@ namespace Dota2CommonLib.Items
             }
         }
 
+        [IgnoreDataMember]
         protected override string BaseURI
         {
             get
@@ -68,6 +71,7 @@ namespace Dota2CommonLib.Items
             }
         }
 
+        [IgnoreDataMember]
         protected override ImageType PictureType
         {
             get

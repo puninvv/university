@@ -12,7 +12,7 @@ namespace Dota2CommonLib.Matches
     {
         /// <summary>The match's unique ID</summary>
         [DataMember(Name = "match_id")]
-        public int Id
+        public uint Id
         {
             get;
             set;
@@ -20,7 +20,7 @@ namespace Dota2CommonLib.Matches
 
         ///<summary>The sequence number representing the order in which matches were recorded</summary>
         [DataMember(Name = "match_seq_num")]
-        public int SequenceNumber
+        public uint SequenceNumber
         {
             get;
             set;
@@ -28,7 +28,7 @@ namespace Dota2CommonLib.Matches
 
         ///<summary>Unix timestamp of when the match began</summary>
         [DataMember(Name = "start_time")]
-        public int StartTime
+        public uint StartTime
         {
             get;
             set;
@@ -36,7 +36,7 @@ namespace Dota2CommonLib.Matches
 
         ///<summary>The match's lobby type</summary>
         [DataMember(Name = "lobby_type")]
-        public int Type
+        public LobbyType Type
         {
             get;
             set;
@@ -44,7 +44,7 @@ namespace Dota2CommonLib.Matches
 
         ///<summary>Team ID for the Radiant</summary>
         [DataMember(Name = "radiant_team_id")]
-        public int RadiantTeamId
+        public uint RadiantTeamId
         {
             get;
             set;
@@ -52,7 +52,7 @@ namespace Dota2CommonLib.Matches
 
         ///<summary>Team ID for the Dire</summary>
         [DataMember(Name = "dire_team_id")]
-        public int DireTeamId
+        public uint DireTeamId
         {
             get;
             set;
@@ -65,5 +65,20 @@ namespace Dota2CommonLib.Matches
             get;
             set;
         }
+
+        public enum LobbyType
+        {
+            Invalid = -1,
+            PublicMatchmaking,
+            Practice,
+            Tournament,
+            Tutorial,
+            CoopWithBots,
+            TeamMatch,
+            SoloQueue,
+            Ranked,
+            SoloMid1VS1
+        }
+
     }
 }

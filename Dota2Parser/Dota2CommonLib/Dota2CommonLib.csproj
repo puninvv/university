@@ -46,14 +46,15 @@
     <Compile Include="Common\LoaderBase.cs" />
     <Compile Include="Common\PictureContainerBase.cs" />
     <Compile Include="Heroes\Hero.cs" />
-    <Compile Include="Heroes\Loader.cs" />
+    <Compile Include="Heroes\HeroesLoader.cs" />
     <Compile Include="Heroes\Response.cs" />
     <Compile Include="Heroes\Result.cs" />
     <Compile Include="Items\Item.cs" />
-    <Compile Include="Items\Loader.cs" />
+    <Compile Include="Items\ItemsLoader.cs" />
     <Compile Include="Items\Response.cs" />
     <Compile Include="Items\Result.cs" />
     <Compile Include="Matches\Match.cs" />
+    <Compile Include="Matches\MatchesLoader.cs" />
     <Compile Include="Matches\Player.cs" />
     <Compile Include="Matches\Response.cs" />
     <Compile Include="Matches\Result.cs" />

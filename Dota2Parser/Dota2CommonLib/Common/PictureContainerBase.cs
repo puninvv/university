@@ -13,7 +13,7 @@ namespace Dota2CommonLib.Common
     [DataContract]
     public abstract class PictureContainerBase
     {
-        [DataMember(Name = "picture", IsRequired = false)]
+        [IgnoreDataMember]
         public Image Picture
         {
             get
@@ -54,16 +54,16 @@ namespace Dota2CommonLib.Common
             }
         }
 
-        [DataMember(Name = "itemName", IsRequired = false)]
+        [IgnoreDataMember]
         protected abstract string ItemName { get; set; }
 
-        [DataMember(Name = "cacheFolder", IsRequired = false)]
+        [IgnoreDataMember]
         protected abstract string CacheFolder{ get; set; }
 
-        [DataMember(Name = "baseUri", IsRequired = false)]
+        [IgnoreDataMember]
         protected abstract string BaseURI { get; set; }
 
-        [DataMember(Name = "pictureType", IsRequired = false)]
+        [IgnoreDataMember]
         protected abstract ImageType PictureType { get; set; }
     }
 }
