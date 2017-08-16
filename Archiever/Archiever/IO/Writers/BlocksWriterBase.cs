@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Archiever.IO.Writers
 {
-    internal abstract class BlocksWriterBase : IOThreadWrapper, IOperation
+    internal abstract class BlocksWriterBase : IOThreadWrapper
     {
         private SortedList<int, IndexedBlock> m_blocks;
         private object m_lock = new object();

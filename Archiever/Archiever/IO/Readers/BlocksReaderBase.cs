@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Archiever.IO.Readers
 {
-    internal abstract class BlocksReaderBase : IOThreadWrapper, IOperation
+    internal abstract class BlocksReaderBase : IOThreadWrapper
     {
         private const int m_bufferLength = 1024 * 1024 * 10;
         private object m_lock;
