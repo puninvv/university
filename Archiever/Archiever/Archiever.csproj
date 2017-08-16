@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Archievers\Compressor.cs" />
+    <Compile Include="Archievers\Decompressor.cs" />
     <Compile Include="CancellationToken.cs" />
     <Compile Include="Helpers\ArgsParser.cs" />
     <Compile Include="Helpers\ArgsParserResult.cs" />
@@ -57,8 +58,9 @@
     <Compile Include="IO\IOperation.cs" />
     <Compile Include="IO\IOThreadWrapper.cs" />
     <Compile Include="IO\Readers\CompressedBlocksReader.cs" />
-    <Compile Include="IO\Readers\BlocksReader.cs" />
-    <Compile Include="IO\Writers\BlocksWriter.cs" />
+    <Compile Include="IO\Readers\UncompressedBlocksReader.cs" />
+    <Compile Include="IO\Writers\CompressedBlocksWriter.cs" />
+    <Compile Include="IO\Writers\UncompressedBlocksWriter.cs" />
     <Compile Include="ThreadWrapper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

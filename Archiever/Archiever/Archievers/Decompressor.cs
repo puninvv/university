@@ -10,12 +10,12 @@ using System.Text;
 
 namespace Archiever.Archievers
 {
-    internal class Compressor : ThreadWrapper
+    internal class Decompressor : ThreadWrapper
     {
         private IBlocksReader m_reader;
         private IBlocksWriter m_writer;
 
-        public Compressor(IBlocksReader _reader, IBlocksWriter _writer)
+        public Decompressor(IBlocksReader _reader, IBlocksWriter _writer)
         {
             m_reader = _reader;
             m_writer = _writer;
@@ -32,19 +32,25 @@ namespace Archiever.Archievers
                 if (block == null)
                     continue;
 
-                using (var memoryStream = new MemoryStream())
+                using (var memoryStream = new MemoryStream(block.Bytes))
                 {
-                    using (var gzipStream = new GZipStream(memoryStream, CompressionMode.Compress))
+                    var resultBuffer = new byte[block.Bytes.Length];
+
+                    using (var gzipStream = new GZipStream(memoryStream, CompressionMode.Decompress))
                     {
-                        gzipStream.Write(block.Bytes, 0, block.Bytes.Length);
+                        int readed = gzipStream.Read(resultBuffer, 0, resultBuffer.Length);
+                        var tmpBuffer = new byte[readed];
+                        Array.Copy(resultBuffer, tmpBuffer, readed);
+
+                        resultBuffer = tmpBuffer;
                     }
 
-                    var result = new IndexedBlock(block.Index, memoryStream.ToArray(), block.IsLastBlock);
+                    var result = new IndexedBlock(block.Index, resultBuffer, block.IsLastBlock);
                     m_writer.Write(result);
                 }
 
                 total++;
-                Logger.Instance.Log(string.Format("Compressor: total = {0}", total));
+                Logger.Instance.Log(string.Format("Decompresor: total = {0}", total));
             }
         }
     }

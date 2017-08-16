@@ -7,16 +7,15 @@ using System.Text;
 
 namespace Archiever.IO.Readers
 {
-    internal class BlocksReader : IOThreadWrapper, IBlocksReader
+    internal class UncompressedBlocksReader : IOThreadWrapper, IBlocksReader
     {
-        private int m_bufferLength;
+        private const int m_bufferLength = 1024 * 1024 * 10;
         private object m_lock;
         private Queue<IndexedBlock> m_queue;
 
-        public BlocksReader(string _fileFullPath, int _bufferLength) 
+        public UncompressedBlocksReader(string _fileFullPath) 
             : base(_fileFullPath)
         {
-            m_bufferLength = _bufferLength;
             m_lock = new object();
             m_queue = new Queue<IndexedBlock>();
         }

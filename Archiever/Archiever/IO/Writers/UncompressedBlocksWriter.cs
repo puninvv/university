@@ -9,12 +9,12 @@ using System.Threading;
 
 namespace Archiever.IO.Writers
 {
-    internal class BlocksWriter : IOThreadWrapper, IBlocksWriter
+    internal class UncompressedBlocksWriter : IOThreadWrapper, IBlocksWriter
     {
         private SortedList<int, IndexedBlock> m_blocks;
         private object m_lock = new object();
 
-        public BlocksWriter(string _fileFullPath) 
+        public UncompressedBlocksWriter(string _fileFullPath) 
             : base(_fileFullPath)
         {
             m_blocks = new SortedList<int, IndexedBlock>();
@@ -57,7 +57,7 @@ namespace Archiever.IO.Writers
                     if (block.IsLastBlock)
                         isLastBlockWritten = true;
 
-                    Logger.Instance.Log(string.Format("Writer: in queue = {0}, total = {1}", m_blocks.Count, block.Index));
+                    Logger.Instance.Log(string.Format("Writer: in queue = {0}, total = {1}", m_blocks.Count, block.Index + 1));
                 }
             }
 
