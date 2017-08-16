@@ -10,41 +10,22 @@ using System.Text;
 
 namespace Archiever.Archievers
 {
-    internal class Compressor : ThreadWrapper
+    internal class Compressor : ArchieverBase
     {
-        private IBlocksReader m_reader;
-        private IBlocksWriter m_writer;
+        public Compressor(BlocksReaderBase _reader, BlocksWriterBase _writer) 
+            : base(_reader, _writer)
+        { }
 
-        public Compressor(IBlocksReader _reader, IBlocksWriter _writer)
+        protected override IndexedBlock Update(IndexedBlock _block)
         {
-            m_reader = _reader;
-            m_writer = _writer;
-        }
-
-        protected override void MainJob(CancellationToken _cancellationToken)
-        {
-            int total = 0;
-
-            while (!_cancellationToken.IsCancellationRequested && (!m_reader.IsFinished || !m_writer.IsFinished))
+            using (var memoryStream = new MemoryStream())
             {
-                var block = m_reader.Get();
-
-                if (block == null)
-                    continue;
-
-                using (var memoryStream = new MemoryStream())
+                using (var gzipStream = new GZipStream(memoryStream, CompressionMode.Compress))
                 {
-                    using (var gzipStream = new GZipStream(memoryStream, CompressionMode.Compress))
-                    {
-                        gzipStream.Write(block.Bytes, 0, block.Bytes.Length);
-                    }
-
-                    var result = new IndexedBlock(block.Index, memoryStream.ToArray(), block.IsLastBlock);
-                    m_writer.Write(result);
+                    gzipStream.Write(_block.Bytes, 0, _block.Bytes.Length);
                 }
 
-                total++;
-                Logger.Instance.Log(string.Format("Compressor: total = {0}", total));
+                return new IndexedBlock(_block.Index, memoryStream.ToArray(), _block.IsLastBlock);
             }
         }
     }

@@ -10,47 +10,28 @@ using System.Text;
 
 namespace Archiever.Archievers
 {
-    internal class Decompressor : ThreadWrapper
+    internal class Decompressor : ArchieverBase
     {
-        private IBlocksReader m_reader;
-        private IBlocksWriter m_writer;
+        public Decompressor(BlocksReaderBase _reader, BlocksWriterBase _writer) 
+            : base(_reader, _writer)
+        { }
 
-        public Decompressor(IBlocksReader _reader, IBlocksWriter _writer)
+        protected override IndexedBlock Update(IndexedBlock _block)
         {
-            m_reader = _reader;
-            m_writer = _writer;
-        }
-
-        protected override void MainJob(CancellationToken _cancellationToken)
-        {
-            int total = 0;
-
-            while (!_cancellationToken.IsCancellationRequested && (!m_reader.IsFinished || !m_writer.IsFinished))
+            using (var memoryStream = new MemoryStream(_block.Bytes))
             {
-                var block = m_reader.Get();
+                var resultBuffer = new byte[_block.Bytes.Length];
 
-                if (block == null)
-                    continue;
-
-                using (var memoryStream = new MemoryStream(block.Bytes))
+                using (var gzipStream = new GZipStream(memoryStream, CompressionMode.Decompress))
                 {
-                    var resultBuffer = new byte[block.Bytes.Length];
+                    int readed = gzipStream.Read(resultBuffer, 0, resultBuffer.Length);
+                    var tmpBuffer = new byte[readed];
+                    Array.Copy(resultBuffer, tmpBuffer, readed);
 
-                    using (var gzipStream = new GZipStream(memoryStream, CompressionMode.Decompress))
-                    {
-                        int readed = gzipStream.Read(resultBuffer, 0, resultBuffer.Length);
-                        var tmpBuffer = new byte[readed];
-                        Array.Copy(resultBuffer, tmpBuffer, readed);
-
-                        resultBuffer = tmpBuffer;
-                    }
-
-                    var result = new IndexedBlock(block.Index, resultBuffer, block.IsLastBlock);
-                    m_writer.Write(result);
+                    resultBuffer = tmpBuffer;
                 }
 
-                total++;
-                Logger.Instance.Log(string.Format("Decompresor: total = {0}", total));
+                return new IndexedBlock(_block.Index, resultBuffer, _block.IsLastBlock);
             }
         }
     }

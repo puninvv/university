@@ -6,12 +6,11 @@ using System.Text;
 
 namespace Archiever.IO.Readers
 {
-    internal class CompressedBlocksReader : UncompressedBlocksReader
+    internal class CompressedBlocksReader : BlocksReaderBase
     {
         public CompressedBlocksReader(string _fileFullPath) 
             : base(_fileFullPath)
-        {
-        }
+        { }
 
         protected override IndexedBlock ReadFromStream(Stream _stream, int _index)
         {
