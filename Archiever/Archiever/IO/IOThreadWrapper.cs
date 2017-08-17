@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Archiever.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -26,8 +27,18 @@ namespace Archiever.IO
         {
             return new Thread(() =>
                {
-                   IsFinished = false;
-                   MainJob(m_cancellationToken);
+                   try
+                   {
+
+                       IsFinished = false;
+                       MainJob(m_cancellationToken);
+                   }
+                   catch (Exception ex)
+                   {
+                       Logger.Instance.Log(ex);
+                       m_cancellationToken.RequestCancellation();
+                   }
+
                    IsFinished = true;
                });
         }

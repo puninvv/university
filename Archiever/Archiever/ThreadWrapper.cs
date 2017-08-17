@@ -1,4 +1,5 @@
-﻿using Archiever.IO;
+﻿using Archiever.Helpers;
+using Archiever.IO;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -25,7 +26,18 @@ namespace Archiever
 
         protected virtual Thread CreateThreadFromMainJob()
         {
-            return new Thread(() => MainJob(m_cancellationToken));
+            return new Thread(() =>
+            {
+                try
+                {
+                    MainJob(m_cancellationToken);
+                }
+                catch (Exception ex)
+                {
+                    Logger.Instance.Log(ex);
+                    m_cancellationToken.RequestCancellation();
+                }
+            });
         }
 
         protected abstract void MainJob(CancellationToken _cancellationToken);

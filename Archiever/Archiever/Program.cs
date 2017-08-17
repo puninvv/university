@@ -14,17 +14,29 @@ namespace Archiever
     {
         static void Main(string[] args)
         {
-            var vars = ArgsParser.Parse(args);
+            ArgsParser.ArgsParserResult vars;
 
-            var setup = Setup.CreateFrom(vars, 3);
+            try
+            {
+                vars = ArgsParser.Parse(args);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Logger.Instance.Log(ex);
+                Logger.Instance.DropToFile(Properties.Settings.Default.LogFileName);
+                return;
+            }
+
+            var setup = Setup.CreateFrom(vars, Properties.Settings.Default.ArchieversCount);
 
             var token = new CancellationToken();
 
             setup.Start(token);
             setup.Join();
             setup.Stop();
-           
-            Logger.Instance.DropToFile(@"log.txt");
+
+            Logger.Instance.DropToFile(Properties.Settings.Default.LogFileName);
         }
     }
 }

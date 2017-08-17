@@ -12,12 +12,14 @@ namespace Archiever.IO.Readers
         private const int m_bufferLength = 1024 * 1024 * 10;
         private object m_lock;
         private Queue<IndexedBlock> m_queue;
+        private int m_maxQueueLength;
 
-        public BlocksReaderBase(string _fileFullPath) 
+        public BlocksReaderBase(string _fileFullPath, int _maxQueueLength = 20) 
             : base(_fileFullPath)
         {
             m_lock = new object();
             m_queue = new Queue<IndexedBlock>();
+            m_maxQueueLength = _maxQueueLength;
         }
 
         public IndexedBlock Get()
@@ -38,6 +40,9 @@ namespace Archiever.IO.Readers
 
                 while (!_cancellationToken.IsCancellationRequested && stream.Position < stream.Length)
                 {
+                    if (m_queue.Count >= m_maxQueueLength)
+                        continue;
+
                     var indexedBlock = ReadFromStream(stream, index);
 
                     lock (m_lock)

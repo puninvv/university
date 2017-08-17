@@ -40,6 +40,15 @@ namespace Archiever.Helpers
                 m_sb.Append(DateTime.Now).Append("\t").AppendLine(_str);
         }
 
+        public void Log(Exception ex)
+        {
+            lock (m_writerLock)
+            {
+                m_sb.Append(DateTime.Now).Append("\t").AppendLine(ex.Message);
+                m_sb.Append(DateTime.Now).Append("\t").AppendLine(ex.StackTrace);
+            }
+        }
+
         public void DropToFile(string _filePath)
         {
             File.WriteAllText(_filePath, m_sb.ToString());
