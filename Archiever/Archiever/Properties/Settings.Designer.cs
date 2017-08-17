@@ -46,5 +46,29 @@ namespace Archiever.Properties {
                 this["LogFileName"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("52428800")]
+        public int BufferSize {
+            get {
+                return ((int)(this["BufferSize"]));
+            }
+            set {
+                this["BufferSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("15")]
+        public int MaxQueueSize {
+            get {
+                return ((int)(this["MaxQueueSize"]));
+            }
+            set {
+                this["MaxQueueSize"] = value;
+            }
+        }
     }
 }

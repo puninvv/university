@@ -8,5 +8,11 @@
     <Setting Name="LogFileName" Type="System.String" Scope="User">
       <Value Profile="(Default)">log.txt</Value>
     </Setting>
+    <Setting Name="BufferSize" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">52428800</Value>
+    </Setting>
+    <Setting Name="MaxQueueSize" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">15</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

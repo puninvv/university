@@ -4,22 +4,32 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace Archiever.IO.Readers
 {
     internal abstract class BlocksReaderBase : IOThreadWrapper
     {
-        private const int m_bufferLength = 1024 * 1024 * 10;
+        private readonly int m_bufferLength;
         private object m_lock;
         private Queue<IndexedBlock> m_queue;
-        private int m_maxQueueLength;
+        private readonly int m_maxQueueLength = Properties.Settings.Default.MaxQueueSize;
 
-        public BlocksReaderBase(string _fileFullPath, int _maxQueueLength = 20) 
+        public BlocksReaderBase(string _fileFullPath) 
             : base(_fileFullPath)
         {
             m_lock = new object();
             m_queue = new Queue<IndexedBlock>();
-            m_maxQueueLength = _maxQueueLength;
+
+            if (Properties.Settings.Default.MaxQueueSize > 0)
+                m_maxQueueLength = Properties.Settings.Default.MaxQueueSize;
+            else
+                m_maxQueueLength = 15;
+
+            if (Properties.Settings.Default.BufferSize > 0)
+                m_bufferLength = Properties.Settings.Default.BufferSize;
+            else
+                m_bufferLength = 1024 * 1024 * 50;
         }
 
         public IndexedBlock Get()
@@ -41,7 +51,10 @@ namespace Archiever.IO.Readers
                 while (!_cancellationToken.IsCancellationRequested && stream.Position < stream.Length)
                 {
                     if (m_queue.Count >= m_maxQueueLength)
+                    {
+                        Thread.Sleep(10);
                         continue;
+                    }
 
                     var indexedBlock = ReadFromStream(stream, index);
 
