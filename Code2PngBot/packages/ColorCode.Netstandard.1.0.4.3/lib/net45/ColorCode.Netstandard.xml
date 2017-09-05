@@ -1,0 +1,430 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ColorCode.Netstandard</name>
+    </assembly>
+    <members>
+        <member name="T:ColorCode.CodeColorizer">
+            <summary>
+            Colorizes source code.
+            </summary>
+        </member>
+        <member name="M:ColorCode.CodeColorizer.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:ColorCode.CodeColorizer"/> class.
+            </summary>
+        </member>
+        <member name="M:ColorCode.CodeColorizer.#ctor(ColorCode.Parsing.ILanguageParser)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ColorCode.CodeColorizer"/> class.
+            </summary>
+            <param name="languageParser">The language parser that the <see cref="T:ColorCode.CodeColorizer"/> instance will use for its lifetime.</param>
+        </member>
+        <member name="M:ColorCode.CodeColorizer.Colorize(System.String,ColorCode.ILanguage)">
+            <summary>
+            Colorizes source code using the specified language, the default formatter, and the default style sheet.
+            </summary>
+            <param name="sourceCode">The source code to colorize.</param>
+            <param name="language">The language to use to colorize the source code.</param>
+            <returns>The colorized source code.</returns>
+        </member>
+        <member name="M:ColorCode.CodeColorizer.Colorize(System.String,ColorCode.ILanguage,System.IO.TextWriter)">
+            <summary>
+            Colorizes source code using the specified language, the default formatter, and the default style sheet.
+            </summary>
+            <param name="sourceCode">The source code to colorize.</param>
+            <param name="language">The language to use to colorize the source code.</param>
+            <param name="textWriter">The text writer to which the colorized source code will be written.</param>
+        </member>
+        <member name="M:ColorCode.CodeColorizer.Colorize(System.String,ColorCode.ILanguage,ColorCode.IFormatter,ColorCode.IStyleSheet,System.IO.TextWriter)">
+            <summary>
+            Colorizes source code using the specified language, formatter, and style sheet.
+            </summary>
+            <param name="sourceCode">The source code to colorize.</param>
+            <param name="language">The language to use to colorize the source code.</param>
+            <param name="formatter">The formatter to use to colorize the source code.</param>
+            <param name="styleSheet">The style sheet to use to colorize the source code.</param>
+            <param name="textWriter">The text writer to which the colorized source code will be written.</param>
+        </member>
+        <member name="T:ColorCode.Formatters">
+            <summary>
+            Provides easy access to ColorCode's built-in formatters.
+            </summary>
+        </member>
+        <member name="P:ColorCode.Formatters.Default">
+            <summary>
+            Gets the default formatter.
+            </summary>
+            <remarks>
+            The default formatter produces HTML with inline styles.
+            </remarks>
+        </member>
+        <member name="T:ColorCode.ICodeColorizer">
+            <summary>
+            Defines the contract for a code colorizer.
+            </summary>
+            <seealso cref="T:ColorCode.CodeColorizer"/>
+        </member>
+        <member name="M:ColorCode.ICodeColorizer.Colorize(System.String,ColorCode.ILanguage)">
+            <summary>
+            Colorizes source code using the specified language, the default formatter, and the default style sheet.
+            </summary>
+            <param name="sourceCode">The source code to colorize.</param>
+            <param name="language">The language to use to colorize the source code.</param>
+            <returns>The colorized source code.</returns>
+        </member>
+        <member name="M:ColorCode.ICodeColorizer.Colorize(System.String,ColorCode.ILanguage,System.IO.TextWriter)">
+            <summary>
+            Colorizes source code using the specified language, the default formatter, and the default style sheet.
+            </summary>
+            <param name="sourceCode">The source code to colorize.</param>
+            <param name="language">The language to use to colorize the source code.</param>
+            <param name="textWriter">The text writer to which the colorized source code will be written.</param>
+        </member>
+        <member name="M:ColorCode.ICodeColorizer.Colorize(System.String,ColorCode.ILanguage,ColorCode.IFormatter,ColorCode.IStyleSheet,System.IO.TextWriter)">
+            <summary>
+            Colorizes source code using the specified language, formatter, and style sheet.
+            </summary>
+            <param name="sourceCode">The source code to colorize.</param>
+            <param name="language">The language to use to colorize the source code.</param>
+            <param name="textWriter">The text writer to which the colorized source code will be written.</param>
+            <param name="formatter">The formatter to use to colorize the source code.</param>
+            <param name="styleSheet">The style sheet to use to colorize the source code.</param>
+            <param name="textWriter">The text writer to which the colorized source code will be written.</param>
+        </member>
+        <member name="T:ColorCode.IFormatter">
+            <summary>
+            Defines the contract for a source code formatter.
+            </summary>
+        </member>
+        <member name="M:ColorCode.IFormatter.Write(System.String,System.Collections.Generic.IList{ColorCode.Parsing.Scope},ColorCode.IStyleSheet,System.IO.TextWriter)">
+            <summary>
+            Writes the parsed source code to the ouput using the specified style sheet.
+            </summary>
+            <param name="parsedSourceCode">The parsed source code to format and write to the output.</param>
+            <param name="scopes">The captured scopes for the parsed source code.</param>
+            <param name="styleSheet">The style sheet according to which the source code will be formatted.</param>
+            <param name="textWriter">The text writer to which the formatted source code will be written.</param>
+        </member>
+        <member name="M:ColorCode.IFormatter.WriteFooter(ColorCode.IStyleSheet,ColorCode.ILanguage,System.IO.TextWriter)">
+            <summary>
+            Generates and writes the footer to the output.
+            </summary>
+            <param name="styleSheet">The style sheet according to which the footer will be generated.</param>
+            <param name="language">The language that is having its footer written.</param>
+            <param name="textWriter">The text writer to which footer will be written.</param>
+        </member>
+        <member name="M:ColorCode.IFormatter.WriteHeader(ColorCode.IStyleSheet,ColorCode.ILanguage,System.IO.TextWriter)">
+            <summary>
+            Generates and writes the header to the output.
+            </summary>
+            <param name="styleSheet">The style sheet according to which the header will be generated.</param>
+            <param name="language">The language that is having its header written.</param>
+            <param name="textWriter">The text writer to which header will be written.</param>
+        </member>
+        <member name="T:ColorCode.ILanguage">
+            <summary>
+            Defines how ColorCode will parse the source code of a given language.
+            </summary>
+        </member>
+        <member name="P:ColorCode.ILanguage.Id">
+            <summary>
+            Gets the identifier of the language (e.g., csharp).
+            </summary>
+        </member>
+        <member name="P:ColorCode.ILanguage.FirstLinePattern">
+            <summary>
+            Gets the first line pattern (regex) to use when determining if the language matches a source text.
+            </summary>
+        </member>
+        <member name="P:ColorCode.ILanguage.Name">
+            <summary>
+            Gets the "friendly" name of the language (e.g., C#).
+            </summary>
+        </member>
+        <member name="P:ColorCode.ILanguage.Rules">
+            <summary>
+            Gets the collection of language rules in the language.
+            </summary>
+        </member>
+        <member name="P:ColorCode.ILanguage.CssClassName">
+            <summary>
+            Get the CSS class name to use for a language
+            </summary>
+        </member>
+        <member name="M:ColorCode.ILanguage.HasAlias(System.String)">
+            <summary>
+            Returns true if the specified string is an alias for the language
+            </summary>
+        </member>
+        <member name="T:ColorCode.IStyleSheet">
+            <summary>
+            Defines the contract for a style sheet.
+            </summary>
+        </member>
+        <member name="P:ColorCode.IStyleSheet.Styles">
+            <summary>
+            Gets the dictionary of styles for the style sheet.
+            </summary>
+        </member>
+        <member name="T:ColorCode.LanguageRule">
+            <summary>
+            Defines a single rule for a language. For instance a language rule might define string literals for a given language.
+            </summary>
+        </member>
+        <member name="M:ColorCode.LanguageRule.#ctor(System.String,System.Collections.Generic.IDictionary{System.Int32,System.String})">
+            <summary>
+            Initializes a new instance of the <see cref="T:ColorCode.LanguageRule"/> class.
+            </summary>
+            <param name="regex">The regular expression that defines what the language rule matches and captures.</param>
+            <param name="captures">The scope indices and names of the regular expression's captures.</param>
+        </member>
+        <member name="P:ColorCode.LanguageRule.Regex">
+            <summary>
+            Gets the regular expression that defines what the language rule matches and captures.
+            </summary>
+            <value>The regular expression that defines what the language rule matches and captures.</value>
+        </member>
+        <member name="P:ColorCode.LanguageRule.Captures">
+            <summary>
+            Gets the scope indices and names of the regular expression's captures.
+            </summary>
+            <value>The scope indices and names of the regular expression's captures.</value>
+        </member>
+        <member name="T:ColorCode.Languages">
+            <summary>
+            Provides easy access to ColorCode's built-in languages, as well as methods to load and find custom languages.
+            </summary>
+        </member>
+        <member name="P:ColorCode.Languages.All">
+            <summary>
+            Gets an enumerable list of all loaded languages.
+            </summary>
+        </member>
+        <member name="P:ColorCode.Languages.Ashx">
+            <summary>
+            Language support for ASP.NET HTTP Handlers (.ashx files).
+            </summary>
+            <value>Language support for ASP.NET HTTP Handlers (.ashx files).</value>
+        </member>
+        <member name="P:ColorCode.Languages.Asax">
+            <summary>
+            Language support for ASP.NET application files (.asax files).
+            </summary>
+            <value>Language support for ASP.NET application files (.asax files).</value>
+        </member>
+        <member name="P:ColorCode.Languages.Aspx">
+            <summary>
+            Language support for ASP.NET pages (.aspx files).
+            </summary>
+            <value>Language support for ASP.NET pages (.aspx files).</value>
+        </member>
+        <member name="P:ColorCode.Languages.AspxCs">
+            <summary>
+            Language support for ASP.NET C# code-behind files (.aspx.cs files).
+            </summary>
+            <value>Language support for ASP.NET C# code-behind files (.aspx.cs files).</value>
+        </member>
+        <member name="P:ColorCode.Languages.AspxVb">
+            <summary>
+            Language support for ASP.NET Visual Basic.NET code-behind files (.aspx.vb files).
+            </summary>
+            <value>Language support for ASP.NET Visual Basic.NET code-behind files (.aspx.vb files).</value>
+        </member>
+        <member name="P:ColorCode.Languages.CSharp">
+            <summary>
+            Language support for C#.
+            </summary>
+            <value>Language support for C#.</value>
+        </member>
+        <member name="P:ColorCode.Languages.Html">
+            <summary>
+            Language support for HTML.
+            </summary>
+            <value>Language support for HTML.</value>
+        </member>
+        <member name="P:ColorCode.Languages.Java">
+            <summary>
+            Language support for Java.
+            </summary>
+            <value>Language support for Java.</value>
+        </member>
+        <member name="P:ColorCode.Languages.JavaScript">
+            <summary>
+            Language support for JavaScript.
+            </summary>
+            <value>Language support for JavaScript.</value>
+        </member>
+        <member name="P:ColorCode.Languages.PowerShell">
+            <summary>
+            Language support for PowerShell
+            </summary>
+            <value>Language support for PowerShell.</value>
+        </member>
+        <member name="P:ColorCode.Languages.Sql">
+            <summary>
+            Language support for SQL.
+            </summary>
+            <value>Language support for SQL.</value>
+        </member>
+        <member name="P:ColorCode.Languages.VbDotNet">
+            <summary>
+            Language support for Visual Basic.NET.
+            </summary>
+            <value>Language support for Visual Basic.NET.</value>
+        </member>
+        <member name="P:ColorCode.Languages.Xml">
+            <summary>
+            Language support for XML.
+            </summary>
+            <value>Language support for XML.</value>
+        </member>
+        <member name="P:ColorCode.Languages.Php">
+            <summary>
+            Language support for PHP.
+            </summary>
+            <value>Language support for PHP.</value>
+        </member>
+        <member name="P:ColorCode.Languages.Css">
+            <summary>
+            Language support for CSS.
+            </summary>
+            <value>Language support for CSS.</value>
+        </member>
+        <member name="P:ColorCode.Languages.Cpp">
+            <summary>
+            Language support for C++.
+            </summary>
+            <value>Language support for C++.</value>
+        </member>
+        <member name="P:ColorCode.Languages.Typescript">
+            <summary>
+            Language support for Typescript.
+            </summary>
+            <value>Language support for typescript.</value>
+        </member>
+        <member name="P:ColorCode.Languages.FSharp">
+            <summary>
+            Language support for F#.
+            </summary>
+            <value>Language support for F#.</value>
+        </member>
+        <member name="P:ColorCode.Languages.Koka">
+            <summary>
+            Language support for Koka.
+            </summary>
+            <value>Language support for Koka.</value>
+        </member>
+        <member name="P:ColorCode.Languages.Haskell">
+            <summary>
+            Language support for Haskell.
+            </summary>
+            <value>Language support for Haskell.</value>
+        </member>
+        <member name="P:ColorCode.Languages.Markdown">
+            <summary>
+            Language support for Markdown.
+            </summary>
+            <value>Language support for Markdown.</value>
+        </member>
+        <member name="M:ColorCode.Languages.FindById(System.String)">
+            <summary>
+            Finds a loaded language by the specified identifier.
+            </summary>
+            <param name="id">The identifier of the language to find.</param>
+            <returns>An <see cref="T:ColorCode.ILanguage" /> instance if the specified identifier matches a loaded language; otherwise, null.</returns>
+        </member>
+        <member name="M:ColorCode.Languages.Load(ColorCode.ILanguage)">
+            <summary>
+            Loads the specified language.
+            </summary>
+            <param name="language">The language to load.</param>
+            <remarks>
+            If a language with the same identifier has already been loaded, the existing loaded language will be replaced by the new specified language.
+            </remarks>
+        </member>
+        <member name="T:ColorCode.Style">
+            <summary>
+            Defines the styling for a given scope.
+            </summary>
+        </member>
+        <member name="M:ColorCode.Style.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ColorCode.Style"/> class.
+            </summary>
+            <param name="scopeName">The name of the scope the style defines.</param>
+        </member>
+        <member name="P:ColorCode.Style.Background">
+            <summary>
+            Gets or sets the background color.
+            </summary>
+            <value>The background color.</value>
+        </member>
+        <member name="P:ColorCode.Style.Foreground">
+            <summary>
+            Gets or sets the foreground color.
+            </summary>
+            <value>The foreground color.</value>
+        </member>
+        <member name="P:ColorCode.Style.ScopeName">
+            <summary>
+            Gets or sets the name of the scope the style defines.
+            </summary>
+            <value>The name of the scope the style defines.</value>
+        </member>
+        <member name="P:ColorCode.Style.CssClassName">
+            <summary>
+            Gets or sets the name of the CSS class.
+            </summary>
+            <value>The CSS class name.</value>
+        </member>
+        <member name="P:ColorCode.Style.Italic">
+            <summary>
+            Gets or sets italic font style.
+            </summary>
+            <value>True if italic.</value>
+        </member>
+        <member name="P:ColorCode.Style.Bold">
+            <summary>
+            Gets or sets bold font style.
+            </summary>
+            <value>True if bold.</value>
+        </member>
+        <member name="M:ColorCode.Style.ToString">
+            <summary>
+            Returns a <see cref="T:System.String"/> that represents this instance.
+            </summary>
+            <returns>
+            A <see cref="T:System.String"/> that represents this instance.
+            </returns>
+            <remarks>
+            Returns the scope name if specified, or String.Empty otherwise.
+            </remarks>
+        </member>
+        <member name="T:ColorCode.StyleDictionary">
+            <summary>
+            A dictionary of <see cref="T:ColorCode.Style" /> instances, keyed by the styles' scope name.
+            </summary>
+        </member>
+        <member name="M:ColorCode.StyleDictionary.GetKeyForItem(ColorCode.Style)">
+            <summary>
+            When implemented in a derived class, extracts the key from the specified element.
+            </summary>
+            <param name="item">The element from which to extract the key.</param>
+            <returns>The key for the specified element.</returns>
+        </member>
+        <member name="T:ColorCode.StyleSheets">
+            <summary>
+            Provides easy access to ColorCode's built-in style sheets.
+            </summary>
+        </member>
+        <member name="P:ColorCode.StyleSheets.Default">
+            <summary>
+            Gets the default style sheet.
+            </summary>
+            <remarks>
+            The default style sheet mimics the default colorization scheme used by Visual Studio 2008 to the extent possible.
+            </remarks>
+        </member>
+    </members>
+</doc>
