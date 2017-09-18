@@ -29,7 +29,7 @@ namespace Code2PngBot.Responders
                 var source = _msg.Text.Remove(0, lng.Item2);
                 var colorizedCode = new CodeColorizer().Colorize(source, lng.Item1);
 
-                var image = TheArtOfDev.HtmlRenderer.WinForms.HtmlRender.RenderToImage(colorizedCode);
+                var image = TheArtOfDev.HtmlRenderer.WinForms.HtmlRender.RenderToImageGdiPlus(colorizedCode);
 
                 var tmpFileName = Guid.NewGuid().ToString() + ".png";
                 image.Save(tmpFileName, ImageFormat.Png);
