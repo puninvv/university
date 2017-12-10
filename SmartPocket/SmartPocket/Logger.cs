@@ -11,7 +11,7 @@ public static class Logger
         get { return log; }
     }
 
-    public static void InitLogger()
+    static Logger()
     {
         XmlConfigurator.Configure();
     }

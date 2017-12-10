@@ -9,6 +9,6 @@ namespace SmartPocket.DALC
 {
     public class DBConfig
     {
-        public static string ConnectionString { get => $"Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename={Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location)}\\UsersDB.mdf;Integrated Security=False"; }
+        public static string ConnectionString { get => $"Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename={Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location)}\\UsersDB.mdf"; }
     }
 }

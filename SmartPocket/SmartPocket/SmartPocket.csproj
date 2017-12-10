@@ -124,6 +124,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DALC\DBConfig.cs" />
+    <Compile Include="DALC\DBTest.cs" />
     <Compile Include="DALC\Transaction.cs" />
     <Compile Include="DALC\User.cs" />
     <Compile Include="Logger.cs" />
