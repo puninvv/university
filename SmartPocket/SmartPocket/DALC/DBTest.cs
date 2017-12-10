@@ -8,10 +8,8 @@ namespace SmartPocket.DALC
 {
     class DBTest
     {
-        private void Test()
+        public void Test()
         {
-            Logger.InitLogger();
-
             Logger.Log.Info("Entering application.");
             try
             {
