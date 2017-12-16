@@ -45,7 +45,9 @@ namespace SmartPocket.Dialogs
 
                     UserDalc.CreateOrUpdateUser(user);
 
-                    _bot.SendTextMessageAsync(_message.Chat.Id, command.SwitchTo.Greeting);
+                    if (!string.IsNullOrWhiteSpace(command.SwitchTo.Greeting))
+                        _bot.SendTextMessageAsync(_message.Chat.Id, command.SwitchTo.Greeting);
+
                     command.SwitchTo.ProcessMessage(_message, _bot, user);
 
                     return true;

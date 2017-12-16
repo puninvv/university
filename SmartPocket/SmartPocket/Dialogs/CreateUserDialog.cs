@@ -15,13 +15,23 @@ namespace SmartPocket.Dialogs
     {
         public DialogType DialogType => DialogType.CreateUser;
 
-        public string Greeting => "Введите имя нового пользователя:";
+        public string Greeting => string.Empty;
 
         public List<ICommand> SupportedCommands => throw new NotImplementedException();
 
         public bool ProcessMessage(Message _message, ITelegramBotClient _bot, DALC.User _user)
         {
             var context = CreateUserDialogContext.CreateFrom(_user.DialogContext);
+
+            if (!context.IsFirstNameAsked)
+            {
+                _bot.SendTextMessageAsync(_message.Chat.Id, "Введите его имя:");
+                context.IsFirstNameAsked = true;
+                _user.DialogContext = context.ToString();
+                UserDalc.CreateOrUpdateUser(_user);
+                return true;
+            }
+
 
             if (context.IsFirstNameAsked && !context.IsLastNameAsked)
             {
@@ -71,20 +81,23 @@ namespace SmartPocket.Dialogs
                     UserDalc.CreateOrUpdateUser(context.NewUser);
 
                     _user.DialogType = DialogType.Default;
-                    context.IsUserCreated = true;
+                    _user.DialogContext = string.Empty;
+                    UserDalc.CreateOrUpdateUser(_user);
                 }
                 catch (Exception ex)
                 {
+                    Logger.Log.Error("exception occured:", ex);
+
+
                     _bot.SendTextMessageAsync(_message.Chat.Id, "Не понял. Введите его роль (0, 1, 2, 3):");
                     context.IsRoleAsked = false;
                     _user.DialogContext = context.ToString();
+
+                    return false;
                 }
             }
 
-            _user.DialogContext = context.ToString();
-            UserDalc.CreateOrUpdateUser(_user);
-
-            return true;
+            return false;
         }
     }
 
@@ -92,7 +105,7 @@ namespace SmartPocket.Dialogs
     {
         public DALC.User NewUser { get; set; } = new DALC.User();
 
-        public bool IsFirstNameAsked { get; set; } = true;
+        public bool IsFirstNameAsked { get; set; }
         public bool IsLastNameAsked { get; set; }
         public bool IsInfoAsked { get; set; }
         public bool IsRoleAsked { get; set; }
@@ -108,7 +121,7 @@ namespace SmartPocket.Dialogs
         {
             try
             {
-                return Newtonsoft.Json.JsonConvert.DeserializeObject<CreateUserDialogContext>(_json);
+                return Newtonsoft.Json.JsonConvert.DeserializeObject<CreateUserDialogContext>(_json) ?? new CreateUserDialogContext();
             }
             catch (Exception ex)
             {

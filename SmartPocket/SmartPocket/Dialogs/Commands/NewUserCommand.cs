@@ -12,11 +12,4 @@ namespace SmartPocket.Dialogs.Commands
         public string Info => "содание нового пользователя";
         public IUserDialog SwitchTo => new CreateUserDialog();
     }
-
-    class NewTransaction : ICommand
-    {
-        public string Command => "отправил";
-        public string Info => "содание транзакции";
-        public IUserDialog SwitchTo => new CreateUserDialog();
-    }
 }

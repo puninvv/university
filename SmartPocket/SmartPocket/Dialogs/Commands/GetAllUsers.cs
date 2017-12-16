@@ -30,7 +30,6 @@ namespace SmartPocket.Dialogs.Commands
         {
             try
             {
-
                 if (_user.Role != UserRole.ZeroLevel && _user.Role != UserRole.FirstLevel)
                 {
                     _bot.SendTextMessageAsync(_message.Chat.Id, "Прав у тебя не достаточно");
@@ -44,6 +43,9 @@ namespace SmartPocket.Dialogs.Commands
                     sb.AppendLine(user.ToStringMinInfo());
 
                 _bot.SendTextMessageAsync(_message.Chat.Id, sb.ToString());
+                _user.DialogType = DialogType.Default;
+                UserDalc.CreateOrUpdateUser(_user);
+
                 return true;
             }
             catch (Exception ex)

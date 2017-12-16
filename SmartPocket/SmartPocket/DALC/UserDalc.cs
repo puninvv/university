@@ -28,7 +28,10 @@ namespace SmartPocket.DALC
 
                 using (var reader = cmd.ExecuteReader())
                 {
-                    result = ReadUserFromReader(reader);
+                    if (reader.Read())
+                    {
+                        result = ReadUserFromReader(reader);
+                    }
                 };
             }
 
@@ -128,25 +131,23 @@ namespace SmartPocket.DALC
 
         private static User ReadUserFromReader(SqlDataReader _reader)
         {
-            if (_reader.Read())
-            {
-                var result = new User();
+            var result = new User();
 
-                result.Id = (Guid)_reader["Id"];
-                result.FirstName = _reader["FirstName"] as string;
-                result.LastName = _reader["LastName"] as string;
-                result.Info = _reader["Info"] as string;
-                result.Role = (UserRole)(int)_reader["Role"];
-                result.TelegramChatId = _reader["TelegramChatId"] == DBNull.Value ? null : (int?)_reader["TelegramChatId"];
-                result.TelegramUserId = _reader["TelegramUserId"] == DBNull.Value ? null : (int?)_reader["TelegramUserId"]; ;
-                result.TelegramUserName = _reader["TelegramUserName"] as string;
-                result.DialogType = (DialogType)(int)_reader["DialogType"];
-                result.DialogContext = _reader["DialogContext"] as string;
+            result.Id = (Guid)_reader["Id"];
+            result.FirstName = _reader["FirstName"] as string;
+            result.LastName = _reader["LastName"] as string;
+            result.Info = _reader["Info"] as string;
 
-                return result;
-            }
+            var role = _reader["Role"];
+            result.Role = role == DBNull.Value ? UserRole.ThirdLevel : (UserRole)(int)role;
 
-            return null;
+            result.TelegramChatId = _reader["TelegramChatId"] == DBNull.Value ? null : (int?)_reader["TelegramChatId"];
+            result.TelegramUserId = _reader["TelegramUserId"] == DBNull.Value ? null : (int?)_reader["TelegramUserId"]; ;
+            result.TelegramUserName = _reader["TelegramUserName"] as string;
+            result.DialogType = (DialogType)(int)_reader["DialogType"];
+            result.DialogContext = _reader["DialogContext"] as string;
+
+            return result;
         }
 
 
