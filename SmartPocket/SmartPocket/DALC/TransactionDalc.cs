@@ -39,7 +39,7 @@ namespace SmartPocket.DALC
                         transaction.FromUserID = (Guid)reader["FromUserId"];
                         transaction.ToUserId = (Guid)reader["ToUserId"];
                         transaction.Amount = (decimal)reader["Amount"];
-                        transaction.State = (TransactionState)(short)reader["Confirmed"];
+                        transaction.State = (TransactionState)(short)reader["State"];
                         transaction.DateTime = (DateTime)reader["DateTime"];
 
                         result.Add(transaction);
