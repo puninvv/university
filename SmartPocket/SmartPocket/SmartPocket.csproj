@@ -162,10 +162,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="UsersDB.mdf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="UsersDB_log.ldf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <DependentUpon>UsersDB.mdf</DependentUpon>
     </Content>
   </ItemGroup>

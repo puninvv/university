@@ -83,6 +83,7 @@ namespace SmartPocket.Dialogs
                     _user.DialogType = DialogType.Default;
                     _user.DialogContext = string.Empty;
                     UserDalc.CreateOrUpdateUser(_user);
+                    _bot.SendTextMessageAsync(_message.Chat.Id, "Угу, создал:)");
                 }
                 catch (Exception ex)
                 {
