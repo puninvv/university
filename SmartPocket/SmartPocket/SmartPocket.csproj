@@ -133,11 +133,16 @@
     <Compile Include="DALC\TransactionDalc.cs" />
     <Compile Include="DALC\User.cs" />
     <Compile Include="DALC\UserDalc.cs" />
-    <Compile Include="Handlers\Controller\MessageHanldersController.cs" />
-    <Compile Include="Handlers\CreateUserHandler.cs" />
-    <Compile Include="Handlers\IMessageHandler.cs" />
-    <Compile Include="Handlers\Controller\IMessageHandlersController.cs" />
-    <Compile Include="Handlers\IMessageProcessor.cs" />
+    <Compile Include="Dialogs\Commands\GetAllUsers.cs" />
+    <Compile Include="Dialogs\Commands\GetUserUnfoCommand.cs" />
+    <Compile Include="Dialogs\Commands\NewUserCommand.cs" />
+    <Compile Include="Dialogs\Commands\ToRootDialog.cs" />
+    <Compile Include="Dialogs\CreateUserDialog.cs" />
+    <Compile Include="Dialogs\Commands\ICommand.cs" />
+    <Compile Include="Dialogs\IUserDialog.cs" />
+    <Compile Include="Dialogs\RootDialog.cs" />
+    <Compile Include="Dialogs\IMessageHandler.cs" />
+    <Compile Include="Dialogs\IMessageProcessor.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -176,5 +181,6 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -22,7 +22,7 @@ namespace SmartPocket.DALC
 
                 var cmd = sqlConnection.CreateCommand();
 
-                cmd.CommandText = "dbo.UserGet";
+                cmd.CommandText = "dbo.[UserGetByTelegramUserName]";
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@TelegramUserName", _telegramUserName);
 
@@ -67,7 +67,7 @@ namespace SmartPocket.DALC
             return result;
         }
 
-        public static User GetUser(uint _telegramUserId)
+        public static User GetUser(int _telegramUserId)
         {
             Logger.Log.Info($"{nameof(UserDalc)}.{nameof(GetUser)}: {nameof(_telegramUserId)}={_telegramUserId}");
 
@@ -97,6 +97,35 @@ namespace SmartPocket.DALC
             return result;
         }
 
+        public static List<User> GetUsers()
+        {
+            Logger.Log.Info($"{nameof(UserDalc)}.{nameof(GetUsers)}");
+
+            List<User> result = new List<User>();
+
+            using (var sqlConnection = new SqlConnection(DBConfig.ConnectionString))
+            {
+                sqlConnection.Open();
+
+                var cmd = sqlConnection.CreateCommand();
+
+                cmd.CommandText = "[dbo].[UserList]";
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var tmpUser = ReadUserFromReader(reader);
+                        if (tmpUser != null)
+                            result.Add(tmpUser);
+                    }
+                };
+            }
+
+            return result;
+        }
+
         private static User ReadUserFromReader(SqlDataReader _reader)
         {
             if (_reader.Read())
@@ -108,9 +137,11 @@ namespace SmartPocket.DALC
                 result.LastName = _reader["LastName"] as string;
                 result.Info = _reader["Info"] as string;
                 result.Role = (UserRole)(int)_reader["Role"];
-                result.TelegramChatId = (int?)_reader["TelegramChatId"];
-                result.TelegramUserId = (int?)_reader["TelegramUserId"];
+                result.TelegramChatId = _reader["TelegramChatId"] == DBNull.Value ? null : (int?)_reader["TelegramChatId"];
+                result.TelegramUserId = _reader["TelegramUserId"] == DBNull.Value ? null : (int?)_reader["TelegramUserId"]; ;
                 result.TelegramUserName = _reader["TelegramUserName"] as string;
+                result.DialogType = (DialogType)(int)_reader["DialogType"];
+                result.DialogContext = _reader["DialogContext"] as string;
 
                 return result;
             }
@@ -140,6 +171,8 @@ namespace SmartPocket.DALC
                 cmd.Parameters.AddWithValue("@TelegramUserId", _user.TelegramUserId);
                 cmd.Parameters.AddWithValue("@TelegramChatId", _user.TelegramChatId);
                 cmd.Parameters.AddWithValue("@Role", _user.Role);
+                cmd.Parameters.AddWithValue("@DialogType", _user.DialogType);
+                cmd.Parameters.AddWithValue("@DialogContext", _user.DialogContext);
 
 
                 using (var reader = cmd.ExecuteReader())
