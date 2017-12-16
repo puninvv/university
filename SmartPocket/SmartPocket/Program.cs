@@ -12,19 +12,20 @@ namespace SmartPocket
     {
         public static void Main(string[] _args)
         {
-            Logger.Log.Info("Started");
-            var bot = new Telegram.Bot.TelegramBotClient("403796151:AAF7ia5i-jbet0jEFE2DltS9w263_SqCptk");
-            bot.OnMessage += Bot_OnMessage;
-            bot.StartReceiving();
-
-            Logger.Log.Info("Bot is working!");
-            Console.ReadKey();
-
-            bot.OnMessage -= Bot_OnMessage;
-            bot.StopReceiving();
-            Logger.Log.Info("Stopped");
+            DBTest.Test();
+            
+            //Logger.Log.Info("Started");
+            //var bot = new Telegram.Bot.TelegramBotClient("403796151:AAF7ia5i-jbet0jEFE2DltS9w263_SqCptk");
+            //bot.OnMessage += Bot_OnMessage;
+            //bot.StartReceiving();
+            //
+            //Logger.Log.Info("Bot is working!");
+            //Console.ReadKey();
+            //
+            //bot.OnMessage -= Bot_OnMessage;
+            //bot.StopReceiving();
+            //Logger.Log.Info("Stopped");
         }
-
         private static void Bot_OnMessage(object sender, Telegram.Bot.Args.MessageEventArgs e)
         {
             Logger.Log.Info("New message!");
@@ -36,7 +37,7 @@ namespace SmartPocket
             Logger.Log.Info($"{nameof(e.Message.Contact.PhoneNumber)}:{e.Message?.Contact?.PhoneNumber}");
             Logger.Log.Info($"{nameof(e.Message.Contact.UserId)}:{e.Message?.Contact?.UserId}");
             Logger.Log.Info($"{nameof(e.Message.Text)}:{e.Message?.Text}");
-            Logger.Log.Info($"{nameof(e.Message)}:{e.Message}");
+            Logger.Log.Info($"{nameof(e.Message)}:{Newtonsoft.Json.JsonConvert.SerializeObject(e.Message)}");
         }
     }
 }

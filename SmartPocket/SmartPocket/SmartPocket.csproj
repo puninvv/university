@@ -130,7 +130,9 @@
     <Compile Include="DALC\DBConfig.cs" />
     <Compile Include="DALC\DBTest.cs" />
     <Compile Include="DALC\Transaction.cs" />
+    <Compile Include="DALC\TransactionDalc.cs" />
     <Compile Include="DALC\User.cs" />
+    <Compile Include="DALC\UserDalc.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
