@@ -9,5 +9,6 @@ namespace SmartPocket.Handlers
     interface IMessageHandler : IMessageProcessor
     {
         List<string> SupportedCommands { get; }
+        string Info { get; }
     }
 }

@@ -14,13 +14,27 @@ namespace SmartPocket.Handlers.Controller
 
         public void ProcessMessage(Message _message, ITelegramBotClient _bot)
         {
-            var command = string.Join(string.Empty, _message.Text.TakeWhile(c => c != ' '));
+            var command = string.Join(string.Empty, _message.Text.TakeWhile(c => c != ' ')).ToLowerInvariant();
 
-            if (m_handlers.ContainsKey(command))
-                m_handlers[command].ProcessMessage(_message, _bot);
-            else
+            try
             {
-                _bot.SendTextMessageAsync(_message.Chat.Id, "Нихренашечки не понял");
+                if (m_handlers.ContainsKey(command))
+                    m_handlers[command].ProcessMessage(_message, _bot);
+                else
+                {
+                    var supportedCommands = new StringBuilder();
+                    supportedCommands.AppendLine("Не понял команды. Поддерживаемые:");
+
+                    foreach (var item in m_handlers)
+                        supportedCommands.Append(item.Key).Append(" - ").Append(item.Value.Info).AppendLine();
+
+                    _bot.SendTextMessageAsync(_message.Chat.Id, supportedCommands.ToString());
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error($"{nameof(MessageHanldersController)}.{nameof(ProcessMessage)}:", ex);
+                _bot.SendTextMessageAsync(_message.Chat.Id, "Ошибочка вышла, попробуйте ещё раз. Или напишите на почту разработчика punin.v.v@gmail.com");
             }
         }
 
@@ -28,10 +42,12 @@ namespace SmartPocket.Handlers.Controller
         {
             foreach (var command in _handler.SupportedCommands)
             {
-                if (m_handlers.ContainsKey(command))
+                var lowerCommand = command.ToLowerInvariant();
+
+                if (m_handlers.ContainsKey(lowerCommand))
                     throw new InvalidOperationException(nameof(Register));
 
-                m_handlers.Add(command, _handler);
+                m_handlers.Add(lowerCommand, _handler);
             }
         }
 

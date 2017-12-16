@@ -134,6 +134,7 @@
     <Compile Include="DALC\User.cs" />
     <Compile Include="DALC\UserDalc.cs" />
     <Compile Include="Handlers\Controller\MessageHanldersController.cs" />
+    <Compile Include="Handlers\CreateUserHandler.cs" />
     <Compile Include="Handlers\IMessageHandler.cs" />
     <Compile Include="Handlers\Controller\IMessageHandlersController.cs" />
     <Compile Include="Handlers\IMessageProcessor.cs" />

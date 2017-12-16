@@ -20,6 +20,8 @@ namespace SmartPocket
         {
             Logger.Log.Info("Started");
 
+            m_handlersController.Register(new CreateUserHandler());
+
             m_bot.OnMessage += Bot_OnMessage;
             m_bot.StartReceiving();
             
@@ -33,7 +35,15 @@ namespace SmartPocket
 
         private static void Bot_OnMessage(object sender, Telegram.Bot.Args.MessageEventArgs e)
         {
-            m_handlersController.ProcessMessage(e.Message, m_bot);
+
+            try
+            {
+                m_handlersController.ProcessMessage(e.Message, m_bot);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error("Some exception occured:", ex);
+            }
 
             Logger.Log.Info($"{nameof(e.Message)}:{Newtonsoft.Json.JsonConvert.SerializeObject(e.Message)}");
         }
