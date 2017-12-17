@@ -7,7 +7,7 @@ namespace SmartPocket
 {
     public class Program
     {
-        private static readonly IUserDialog m_rootDialog = new RootDialog();
+        private static readonly DialogsController m_controller = new DialogsController();
         private static readonly ITelegramBotClient m_bot = new TelegramBotClient("403796151:AAF7ia5i-jbet0jEFE2DltS9w263_SqCptk");
 
         private static void CreateAdmin()
@@ -21,7 +21,6 @@ namespace SmartPocket
                 admin.LastName = "Пунин";
                 admin.Role = UserRole.ZeroLevel;
                 admin.Info = "punin.v.v@gmail.com";
-                admin.DialogType = DialogType.Default;
 
                 admin = UserDalc.CreateOrUpdateUser(admin);
             }
@@ -49,7 +48,7 @@ namespace SmartPocket
         {
             try
             {
-                m_rootDialog.ProcessMessage(e.Message, m_bot, null);
+                m_controller.ProcessMessage(e.Message, m_bot);
             }
             catch (Exception ex)
             {

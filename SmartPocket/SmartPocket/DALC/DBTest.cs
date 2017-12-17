@@ -33,8 +33,6 @@ namespace SmartPocket.DALC
                     Info = "STC c# developer",
                     TelegramUserName = "puninvv",
                     Role = UserRole.ZeroLevel,
-                    DialogType = DialogType.CreateUser,
-                    DialogContext = string.Empty
                 };
 
                 user2 = new User()
@@ -45,8 +43,6 @@ namespace SmartPocket.DALC
                     Info = "STC c# developer",
                     TelegramUserName = "puninvv1",
                     Role = UserRole.ZeroLevel,
-                    DialogType = DialogType.NewUser,
-                    DialogContext = string.Empty
                 };
 
                 user3 = new User()
@@ -57,8 +53,6 @@ namespace SmartPocket.DALC
                     Info = "STC c# developer",
                     TelegramUserName = "puninvv2",
                     Role = UserRole.ZeroLevel,
-                    DialogType = DialogType.NewUser,
-                    DialogContext = string.Empty
                 };
 
                 user1 = UserDalc.CreateOrUpdateUser(user1);

@@ -133,16 +133,14 @@
     <Compile Include="DALC\TransactionDalc.cs" />
     <Compile Include="DALC\User.cs" />
     <Compile Include="DALC\UserDalc.cs" />
-    <Compile Include="Dialogs\Commands\GetAllUsers.cs" />
-    <Compile Include="Dialogs\Commands\GetUserUnfoCommand.cs" />
-    <Compile Include="Dialogs\Commands\NewUserCommand.cs" />
-    <Compile Include="Dialogs\Commands\ToRootDialog.cs" />
-    <Compile Include="Dialogs\CreateUserDialog.cs" />
-    <Compile Include="Dialogs\Commands\ICommand.cs" />
-    <Compile Include="Dialogs\IUserDialog.cs" />
-    <Compile Include="Dialogs\RootDialog.cs" />
-    <Compile Include="Dialogs\IMessageHandler.cs" />
-    <Compile Include="Dialogs\IMessageProcessor.cs" />
+    <Compile Include="Dialogs\GetAllUsers.cs" />
+    <Compile Include="Dialogs\ICommand.cs" />
+    <Compile Include="Dialogs\DialogsController.cs" />
+    <Compile Include="Dialogs\DialogsFactory.cs" />
+    <Compile Include="Dialogs\AddUser.cs" />
+    <Compile Include="Dialogs\Root.cs" />
+    <Compile Include="Dialogs\UserDialogBase.cs" />
+    <Compile Include="JsonSerializerSettingsSingletone.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -162,11 +160,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="UsersDB.mdf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="UsersDB_log.ldf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <DependentUpon>UsersDB.mdf</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>

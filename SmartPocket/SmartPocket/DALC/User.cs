@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SmartPocket.Dialogs;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -10,15 +11,10 @@ namespace SmartPocket.DALC
 {
     public enum DialogType : int
     {
-        NewUser,
-        Default,
-        CreateUser,
-        DeleteUser,
-        CreateTransaction,
-        CommitTransaction,
-        AbortTransaction,
-        GetUserInfo,
-        GetAllUsers
+        Root,
+        AddUser,
+        RemoveUser,
+        GetUsers,
     }
 
     public enum UserRole : int
@@ -40,9 +36,9 @@ namespace SmartPocket.DALC
 
         public string TelegramUserName { get; set; }
         public int? TelegramUserId { get; set; } 
-        public int? TelegramChatId { get; set; } 
-        public DialogType DialogType { get; set; }
-        public string DialogContext { get; set; }
+        public int? TelegramChatId { get; set; }
+        public DialogType DialogType { get; set; } = DialogType.Root;
+        public string DialogContext { get; set; } = new RootDialog().SerializeToJson();
 
         public string ToStringMinInfo()
         {
