@@ -141,7 +141,7 @@ namespace SmartPocket.DALC
             var role = _reader["Role"];
             result.Role = role == DBNull.Value ? UserRole.ThirdLevel : (UserRole)(int)role;
 
-            result.TelegramChatId = _reader["TelegramChatId"] == DBNull.Value ? null : (int?)_reader["TelegramChatId"];
+            result.TelegramChatId = _reader["TelegramChatId"] == DBNull.Value ? null : (long?)_reader["TelegramChatId"];
             result.TelegramUserId = _reader["TelegramUserId"] == DBNull.Value ? null : (int?)_reader["TelegramUserId"]; ;
             result.TelegramUserName = _reader["TelegramUserName"] as string;
             result.DialogType = (DialogType)(int)_reader["DialogType"];

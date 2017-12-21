@@ -28,6 +28,25 @@ namespace SmartPocket.DALC
         {
             return Newtonsoft.Json.JsonConvert.SerializeObject(this);
         }
+
+        public static string ToCsv(List<Transaction> _transactions, string _delimiter, string _lineEndings)
+        {
+            var sb = new StringBuilder();
+
+            foreach (var transaction in _transactions)
+            {
+                var userFrom = UserDalc.GetUser(transaction.FromUserID);
+                var userTo = UserDalc.GetUser(transaction.ToUserId);
+
+                sb.Append(userFrom.FirstName).Append(_delimiter).Append(userFrom.LastName).Append(_delimiter).Append(userFrom.Info).Append(_delimiter);
+                sb.Append(userTo.FirstName).Append(_delimiter).Append(userTo.LastName).Append(_delimiter).Append(userTo.Info).Append(_delimiter);
+                sb.Append(transaction.DateTime).Append(_delimiter);
+                sb.Append(transaction.State.ToString()).Append(_delimiter);
+                sb.Append(transaction.Amount).Append(_lineEndings);
+            }
+
+            return sb.ToString();
+        }
     }
     
 }

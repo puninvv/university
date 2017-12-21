@@ -33,18 +33,18 @@ namespace SmartPocket
 
             CreateAdmin();
 
-            m_bot.OnMessage += Bot_OnMessage;
+            m_bot.OnMessage += OnBotMessage;
             m_bot.StartReceiving();
             
             Logger.Log.Info("Bot is working!");
             Console.ReadKey();
 
-            m_bot.OnMessage -= Bot_OnMessage;
+            m_bot.OnMessage -= OnBotMessage;
             m_bot.StopReceiving();
             Logger.Log.Info("Stopped");
         }
 
-        private static void Bot_OnMessage(object sender, Telegram.Bot.Args.MessageEventArgs e)
+        private static void OnBotMessage(object sender, Telegram.Bot.Args.MessageEventArgs e)
         {
             try
             {

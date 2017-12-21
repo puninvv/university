@@ -15,6 +15,8 @@ namespace SmartPocket.DALC
         AddUser,
         RemoveUser,
         GetUsers,
+        SendTransaction,
+        ListTransactions
     }
 
     public enum UserRole : int
@@ -36,7 +38,7 @@ namespace SmartPocket.DALC
 
         public string TelegramUserName { get; set; }
         public int? TelegramUserId { get; set; } 
-        public int? TelegramChatId { get; set; }
+        public long? TelegramChatId { get; set; }
         public DialogType DialogType { get; set; } = DialogType.Root;
         public string DialogContext { get; set; } = new RootDialog().SerializeToJson();
 

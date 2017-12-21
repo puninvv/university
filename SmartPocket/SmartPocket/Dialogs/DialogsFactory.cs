@@ -18,6 +18,10 @@ namespace SmartPocket.Dialogs
                     return new GetAllUsersDialog();
                 case DialogType.AddUser:
                     return new AddUserDialog();
+                case DialogType.SendTransaction:
+                    return new SendTransactionDialog();
+                case DialogType.ListTransactions:
+                    return new GetTransactionsDialog();
                 default:
                     return new RootDialog();
             }

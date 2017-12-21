@@ -6,6 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Types;
+using Telegram.Bot.Types.Enums;
+using Telegram.Bot.Types.InlineKeyboardButtons;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace SmartPocket.Dialogs
 {
@@ -26,6 +29,9 @@ namespace SmartPocket.Dialogs
                     _bot.SendTextMessageAsync(_message.Chat.Id, $"Напишите {Properties.Settings.Default.AdminTelegramUserName} чтобы он добавил вас в систему");
                     return;
                 }
+
+                currentUser.TelegramChatId = _message.Chat.Id;
+                UserDalc.CreateOrUpdateUser(currentUser);
 
                 var dialog = IUserDialogExtensions.DeserializeObject(currentUser.DialogContext);
                 if (dialog == null)
