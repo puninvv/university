@@ -42,7 +42,7 @@ namespace SmartPocket.Dialogs
             if (!IsPhoneNumberAsked)
             {
                 NewUser.LastName = _message.Text;
-                _bot.SendTextMessageAsync(_message.Chat.Id, "Введите номер телефона");
+                _bot.SendTextMessageAsync(_message.Chat.Id, "Введите номер телефона, дополнительную информацию:");
                 IsPhoneNumberAsked = true;
                 goto end;
             }
@@ -50,7 +50,7 @@ namespace SmartPocket.Dialogs
             if (!IsTelegramLoginAsked)
             {
                 NewUser.Info = _message.Text;
-                _bot.SendTextMessageAsync(_message.Chat.Id, "Введите его логин в телеграме");
+                _bot.SendTextMessageAsync(_message.Chat.Id, "Введите его логин в телеграме:");
                 IsTelegramLoginAsked = true;
                 goto end;
             }

@@ -10,6 +10,36 @@ namespace SmartPocket.DALC
 {
     public static class UserDalc
     {
+        public static List<User> GetUsersByInfo(string _info)
+        {
+            Logger.Log.Info($"{nameof(UserDalc)}.{nameof(GetUsersByInfo)}: {nameof(_info)}={_info}");
+
+            List<User> result = new List<User>();
+
+            using (var sqlConnection = new SqlConnection(DBConfig.ConnectionString))
+            {
+                sqlConnection.Open();
+
+                var cmd = sqlConnection.CreateCommand();
+
+                cmd.CommandText = "[dbo].[UserGetByInfo]";
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@Info", _info);
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var tmpUser = ReadUserFromReader(reader);
+                        if (tmpUser != null)
+                            result.Add(tmpUser);
+                    }
+                };
+            }
+
+            return result;
+        }
+
         public static User GetUser(string _telegramUserName)
         {
             Logger.Log.Info($"{nameof(UserDalc)}.{nameof(GetUser)}: {nameof(_telegramUserName)}={_telegramUserName}");

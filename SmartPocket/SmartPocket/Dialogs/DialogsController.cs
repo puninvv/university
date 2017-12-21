@@ -14,7 +14,8 @@ namespace SmartPocket.Dialogs
 {
     class DialogsController
     {
-        private readonly IUserDialog m_defaultDialog = new RootDialog();
+        private readonly string m_defaultDialogContext = new RootDialog().SerializeToJson();
+        private readonly string m_defaultDialogGreeting = new RootDialog().Greeting;
 
         public void ProcessMessage(Message _message, ITelegramBotClient _bot)
         {
@@ -32,6 +33,13 @@ namespace SmartPocket.Dialogs
 
                 currentUser.TelegramChatId = _message.Chat.Id;
                 UserDalc.CreateOrUpdateUser(currentUser);
+
+                if (_message.Text.ToLowerInvariant().StartsWith("назад"))
+                {
+                    _bot.SendTextMessageAsync(_message.Chat.Id, "Ну ок");
+                    currentUser.DialogContext = m_defaultDialogContext;
+                    UserDalc.CreateOrUpdateUser(currentUser);
+                }
 
                 var dialog = IUserDialogExtensions.DeserializeObject(currentUser.DialogContext);
                 if (dialog == null)

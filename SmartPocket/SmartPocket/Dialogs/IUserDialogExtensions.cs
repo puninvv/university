@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Types;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace SmartPocket.Dialogs
 {
@@ -22,14 +23,14 @@ namespace SmartPocket.Dialogs
             foreach (var command in _dialog.SupportedCommands)
                 sb.Append(command.Command).Append(" - ").AppendLine(command.Info);
 
-            _bot.SendTextMessageAsync(_message.Chat.Id, sb.ToString());
+            _bot.SendTextMessageAsync(_message.Chat.Id, sb.ToString(), replyMarkup: new ReplyKeyboardRemove());
         }
 
 
         public static string SerializeToJson(this IUserDialog _dialog)
         {
             var tmpList = new List<IUserDialog>() { _dialog };
-            return JsonConvert.SerializeObject(tmpList, Formatting.Indented, JsonSerializerSettingsSingletone.Instance);
+            return JsonConvert.SerializeObject(tmpList, Formatting.None, JsonSerializerSettingsSingletone.Instance);
         }
 
         public static IUserDialog DeserializeObject(string serializeObject)

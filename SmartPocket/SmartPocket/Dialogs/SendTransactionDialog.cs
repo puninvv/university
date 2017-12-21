@@ -7,6 +7,7 @@ using SmartPocket.DALC;
 using SmartPocket.Dialogs.Commands;
 using Telegram.Bot;
 using Telegram.Bot.Types;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace SmartPocket.Dialogs
 {
@@ -16,6 +17,8 @@ namespace SmartPocket.Dialogs
         public List<ICommand> SupportedCommands { get => new List<ICommand>(); set { } }
 
         public bool IsUserToAsked { get; set; } = false;
+        public bool IsUserToFound { get; set; } = false;
+        public string SelectedInfo { get; set; } = string.Empty;
         public bool IsUserToSelected { get; set; } = false;
         public DALC.User UserTo { get; set; } = null;
 
@@ -31,23 +34,77 @@ namespace SmartPocket.Dialogs
                 goto end;
             }
 
-            if (!IsUserToSelected)
+            if (!IsUserToSelected && !IsUserToFound)
             {
                 var userName = _message.Text;
+                SelectedInfo = userName;
 
                 UserTo = UserDalc.GetUser(userName);
                 if (UserTo != null)
                 {
-                    _bot.SendTextMessageAsync(_message.Chat.Id, "Сколько?");
+                    _bot.SendTextMessageAsync(_message.Chat.Id, "Сколько?", replyMarkup: new ReplyKeyboardRemove());
                     IsUserToSelected = true;
+                    IsUserToFound = true;
                 }
                 else
                 {
-                    _bot.SendTextMessageAsync(_message.Chat.Id, "Не нашёл такого, попробуйте поискать по номеру телефона?");
+                    _bot.SendTextMessageAsync(_message.Chat.Id, "Не нашёл такого, пробую искать по информации о пользователях...");
+
+                    var users = UserDalc.GetUsersByInfo(userName);
+                    if (users.Count != 0)
+                    {
+                        var board = new List<KeyboardButton[]>();
+
+                        for (int i = 0; i < users.Count; i++)
+                            board.Add(new KeyboardButton[] { new KeyboardButton(string.Concat(i, "\t", users[i].ToStringMinInfo())) });
+
+                        var keyboard = new ReplyKeyboardMarkup(board.ToArray());
+
+                        _bot.SendTextMessageAsync(_message.Chat.Id, "Выберите:", replyMarkup: keyboard);
+                        IsUserToFound = true;
+                    }
+                    else
+                    {
+                        _bot.SendTextMessageAsync(_message.Chat.Id, "Всё равно не нашёл... Дайте ещё какую-нибудь зацепочку!");
+                        IsUserToFound = false;
+                    }
+
                     IsUserToSelected = false;
                 }
 
                 goto end;
+            }
+
+            if (!IsUserToSelected && IsUserToFound)
+            {
+                var users = UserDalc.GetUsersByInfo(SelectedInfo);
+
+                int index = -1;
+                try
+                {
+                    index = int.Parse(_message.Text.Split(new string[] { " " }, StringSplitOptions.None).First());
+                    if (index < 0 || index >= users.Count)
+                        index = -1;
+                }
+                catch (Exception ex) { }
+
+
+                if (index != -1)
+                {
+                    UserTo = users[index];
+                    _bot.SendTextMessageAsync(_message.Chat.Id, "Сколько?", replyMarkup: new ReplyKeyboardRemove());
+                    IsUserToSelected = true;
+                    IsUserToFound = true;
+                    goto end;
+                }
+                else
+                {
+                    IsUserToFound = false;
+                    IsUserToSelected = false;
+                    UserTo = null;
+                    _bot.SendTextMessageAsync(_message.Chat.Id, "Чёт вообще не понял, давайте ещё разок уточним, кого же мы ищем?", replyMarkup: new ReplyKeyboardRemove());
+                    goto end;
+                }
             }
 
             try
@@ -57,7 +114,6 @@ namespace SmartPocket.Dialogs
                 TransactionDalc.CreateTransaction(_user.Id.Value, UserTo.Id.Value, Money);
                 _user.DialogContext = new RootDialog().SerializeToJson();
                 UserDalc.CreateOrUpdateUser(_user);
-
                 _bot.SendTextMessageAsync(_message.Chat.Id, "Отправил:)");
                 return;
             }
