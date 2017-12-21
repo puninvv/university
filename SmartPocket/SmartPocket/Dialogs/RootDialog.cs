@@ -11,7 +11,7 @@ public class RootDialog : IUserDialog
     private string m_defaultContext = string.Empty;
 
     public string Greeting { get => "Добрый день! Чем могу быть полезен?"; set { } }
-    public List<ICommand> SupportedCommands { get => new List<ICommand>() { new GetAllUsersCommand(), new AddUserCommand(), new SendTransactionCommand(), new GetTransactionsCommand() }; set { } }
+    public List<ICommand> SupportedCommands { get => new List<ICommand>() { new GetAllUsersCommand(), new AddUserCommand(), new SendTransactionCommand(), new GetTransactionsCommand(), new ReceiveTransactionCommand() }; set { } }
     
     public RootDialog()
     {

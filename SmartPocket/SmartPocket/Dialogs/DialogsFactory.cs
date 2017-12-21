@@ -24,6 +24,8 @@ namespace SmartPocket.Dialogs
                     return new GetTransactionsDialog();
                 case DialogType.ProcessCurrentTransactions:
                     return new ProcessCurrentTransactionsDialog();
+                case DialogType.ReceiveTransaction:
+                    return new ReceiveTransactionDialog();
                 default:
                     return new RootDialog();
             }

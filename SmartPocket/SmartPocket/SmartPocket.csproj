@@ -144,6 +144,8 @@
     <Compile Include="Dialogs\AddUserDialog.cs" />
     <Compile Include="Dialogs\IUserDialogExtensions.cs" />
     <Compile Include="Dialogs\ProcessCurrentTransactionsDialog.cs" />
+    <Compile Include="Dialogs\ReceiveTransactionCommand.cs" />
+    <Compile Include="Dialogs\ReceiveTransactionDialog.cs" />
     <Compile Include="Dialogs\RootDialog.cs" />
     <Compile Include="Dialogs\SendTransactionCommand.cs" />
     <Compile Include="Dialogs\SendTransactionDialog.cs" />

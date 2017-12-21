@@ -17,7 +17,8 @@ namespace SmartPocket.DALC
         GetUsers,
         SendTransaction,
         ListTransactions,
-        ProcessCurrentTransactions
+        ProcessCurrentTransactions,
+        ReceiveTransaction
     }
 
     public enum UserRole : int
