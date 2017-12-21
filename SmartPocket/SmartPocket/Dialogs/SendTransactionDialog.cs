@@ -39,38 +39,27 @@ namespace SmartPocket.Dialogs
                 var userName = _message.Text;
                 SelectedInfo = userName;
 
-                UserTo = UserDalc.GetUser(userName);
-                if (UserTo != null)
+                var users = UserDalc.GetUsersByInfo(userName);
+
+                if (users.Count != 0)
                 {
-                    _bot.SendTextMessageAsync(_message.Chat.Id, "Сколько?", replyMarkup: new ReplyKeyboardRemove());
-                    IsUserToSelected = true;
+                    var board = new List<KeyboardButton[]>();
+
+                    for (int i = 0; i < users.Count; i++)
+                        board.Add(new KeyboardButton[] { new KeyboardButton(string.Concat(i, "\t", users[i].ToStringMinInfo())) });
+
+                    var keyboard = new ReplyKeyboardMarkup(board.ToArray());
+
+                    _bot.SendTextMessageAsync(_message.Chat.Id, "Выберите:", replyMarkup: keyboard);
                     IsUserToFound = true;
                 }
                 else
                 {
-                    _bot.SendTextMessageAsync(_message.Chat.Id, "Не нашёл такого, пробую искать по информации о пользователях...");
-
-                    var users = UserDalc.GetUsersByInfo(userName);
-                    if (users.Count != 0)
-                    {
-                        var board = new List<KeyboardButton[]>();
-
-                        for (int i = 0; i < users.Count; i++)
-                            board.Add(new KeyboardButton[] { new KeyboardButton(string.Concat(i, "\t", users[i].ToStringMinInfo())) });
-
-                        var keyboard = new ReplyKeyboardMarkup(board.ToArray());
-
-                        _bot.SendTextMessageAsync(_message.Chat.Id, "Выберите:", replyMarkup: keyboard);
-                        IsUserToFound = true;
-                    }
-                    else
-                    {
-                        _bot.SendTextMessageAsync(_message.Chat.Id, "Всё равно не нашёл... Дайте ещё какую-нибудь зацепочку!");
-                        IsUserToFound = false;
-                    }
-
-                    IsUserToSelected = false;
+                    _bot.SendTextMessageAsync(_message.Chat.Id, "Всё равно не нашёл... Дайте ещё какую-нибудь зацепочку!");
+                    IsUserToFound = false;
                 }
+
+                IsUserToSelected = false;
 
                 goto end;
             }

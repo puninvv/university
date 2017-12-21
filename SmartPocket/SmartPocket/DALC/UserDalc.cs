@@ -198,7 +198,7 @@ namespace SmartPocket.DALC
                 cmd.Parameters.AddWithValue("@FirstName", _user.FirstName);
                 cmd.Parameters.AddWithValue("@LastName", _user.LastName);
                 cmd.Parameters.AddWithValue("@Info", _user.Info);
-                cmd.Parameters.AddWithValue("@TelegramUserName", _user.TelegramUserName);
+                cmd.Parameters.AddWithValue("@TelegramUserName", _user.TelegramUserName ?? string.Empty);
                 cmd.Parameters.AddWithValue("@TelegramUserId", _user.TelegramUserId);
                 cmd.Parameters.AddWithValue("@TelegramChatId", _user.TelegramChatId);
                 cmd.Parameters.AddWithValue("@Role", _user.Role);

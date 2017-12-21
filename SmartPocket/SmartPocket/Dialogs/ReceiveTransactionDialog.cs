@@ -20,7 +20,7 @@ namespace SmartPocket.Dialogs
         public bool IsUserFromAsked { get; set; } = false;
         public string SelectedInfo { get; set; } = string.Empty;
         public bool IsUserFromSelected { get; set; } = false;
-        public DALC.User UserTo { get; set; } = null;
+        public DALC.User UserFrom { get; set; } = null;
 
         public decimal Money { get; set; } = 0;
 
@@ -38,38 +38,26 @@ namespace SmartPocket.Dialogs
                 var userName = _message.Text;
                 SelectedInfo = userName;
 
-                UserTo = UserDalc.GetUser(userName);
-                if (UserTo != null)
+                var users = UserDalc.GetUsersByInfo(userName);
+                if (users.Count != 0)
                 {
-                    _bot.SendTextMessageAsync(_message.Chat.Id, "Сколько?", replyMarkup: new ReplyKeyboardRemove());
-                    IsUserFromSelected = true;
+                    var board = new List<KeyboardButton[]>();
+
+                    for (int i = 0; i < users.Count; i++)
+                        board.Add(new KeyboardButton[] { new KeyboardButton(string.Concat(i, "\t", users[i].ToStringMinInfo())) });
+
+                    var keyboard = new ReplyKeyboardMarkup(board.ToArray());
+
+                    _bot.SendTextMessageAsync(_message.Chat.Id, "Выберите:", replyMarkup: keyboard);
                     IsUserFromAsked = true;
                 }
                 else
                 {
-                    _bot.SendTextMessageAsync(_message.Chat.Id, "Не нашёл такого, пробую искать по информации о пользователях...");
-
-                    var users = UserDalc.GetUsersByInfo(userName);
-                    if (users.Count != 0)
-                    {
-                        var board = new List<KeyboardButton[]>();
-
-                        for (int i = 0; i < users.Count; i++)
-                            board.Add(new KeyboardButton[] { new KeyboardButton(string.Concat(i, "\t", users[i].ToStringMinInfo())) });
-
-                        var keyboard = new ReplyKeyboardMarkup(board.ToArray());
-
-                        _bot.SendTextMessageAsync(_message.Chat.Id, "Выберите:", replyMarkup: keyboard);
-                        IsUserFromAsked = true;
-                    }
-                    else
-                    {
-                        _bot.SendTextMessageAsync(_message.Chat.Id, "Всё равно не нашёл... Дайте ещё какую-нибудь зацепочку!");
-                        IsUserFromAsked = false;
-                    }
-
-                    IsUserFromSelected = false;
+                    _bot.SendTextMessageAsync(_message.Chat.Id, "Всё равно не нашёл... Дайте ещё какую-нибудь зацепочку!");
+                    IsUserFromAsked = false;
                 }
+
+                IsUserFromSelected = false;
 
                 goto end;
             }
@@ -90,7 +78,7 @@ namespace SmartPocket.Dialogs
 
                 if (index != -1)
                 {
-                    UserTo = users[index];
+                    UserFrom = users[index];
                     _bot.SendTextMessageAsync(_message.Chat.Id, "Сколько?", replyMarkup: new ReplyKeyboardRemove());
                     IsUserFromSelected = true;
                     IsUserFromAsked = true;
@@ -100,7 +88,7 @@ namespace SmartPocket.Dialogs
                 {
                     IsUserFromAsked = false;
                     IsUserFromSelected = false;
-                    UserTo = null;
+                    UserFrom = null;
                     _bot.SendTextMessageAsync(_message.Chat.Id, "Чёт вообще не понял, давайте ещё разок уточним, кого же мы ищем?", replyMarkup: new ReplyKeyboardRemove());
                     goto end;
                 }
@@ -110,7 +98,7 @@ namespace SmartPocket.Dialogs
             {
                 Money = decimal.Parse(_message.Text);
 
-                var trId = TransactionDalc.CreateTransaction(_user.Id.Value, UserTo.Id.Value, Money);
+                var trId = TransactionDalc.CreateTransaction(UserFrom.Id.Value, _user.Id.Value, Money);
                 TransactionDalc.SetTransactionState(trId.Value, TransactionState.Confirmed);
 
                 _user.DialogContext = new RootDialog().SerializeToJson();

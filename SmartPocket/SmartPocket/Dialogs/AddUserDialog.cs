@@ -57,7 +57,7 @@ namespace SmartPocket.Dialogs
 
             try
             {
-                NewUser.TelegramUserName = _message.Text;
+                NewUser.TelegramUserName = _message.Text.ToLowerInvariant() == "нет" ? null : _message.Text;
                 NewUser = UserDalc.CreateOrUpdateUser(NewUser);
                 _bot.SendTextMessageAsync(_message.Chat.Id, "Создал:)");
                 _user.DialogContext = new RootDialog().SerializeToJson();
