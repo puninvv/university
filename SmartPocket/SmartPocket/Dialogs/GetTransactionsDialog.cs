@@ -103,6 +103,8 @@ namespace SmartPocket.Dialogs
 
                 System.IO.File.Delete(filePath);
 
+                _bot.SendTextMessageAsync(_message.Chat.Id, "Отправил все, что нашёл :)", replyMarkup: new ReplyKeyboardRemove());
+
                 _user.DialogContext = new RootDialog().SerializeToJson();
                 UserDalc.CreateOrUpdateUser(_user);
                 return;

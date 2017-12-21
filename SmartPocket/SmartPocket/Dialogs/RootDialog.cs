@@ -14,6 +14,13 @@ public class RootDialog : IUserDialog
     {
         var lowerText = _message.Text.ToLowerInvariant();
 
+        var currentTransaction = TransactionDalc.GetTransactionCurrent(_user.Id.Value);
+        if (currentTransaction != null)
+        {
+            DialogsFactory.CreateFrom(DialogType.ProcessCurrentTransactions).ProcessMessage(_message, _bot, _user);
+            return
+        }
+
         foreach (var command in SupportedCommands)
         {
             if (lowerText.StartsWith(command.Command))

@@ -38,7 +38,7 @@ namespace SmartPocket.Dialogs
                 UserTo = UserDalc.GetUser(userName);
                 if (UserTo != null)
                 {
-                    _bot.SendTextMessageAsync(_message.Chat.Id, "Окей, сколько?");
+                    _bot.SendTextMessageAsync(_message.Chat.Id, "Сколько?");
                     IsUserToSelected = true;
                 }
                 else

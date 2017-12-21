@@ -133,5 +133,41 @@ namespace SmartPocket.DALC
 
             Logger.Log.Info($"{nameof(TransactionDalc)}.{nameof(SetTransactionState)}: success");
         }
+
+        public static Transaction GetTransactionCurrent(Guid _userId)
+        {
+            Logger.Log.Info($"{nameof(TransactionDalc)}.{nameof(GetTransactionCurrent)}: {nameof(_userId)}={_userId}");
+
+            Transaction result = null;
+
+            using (var sqlConnection = new SqlConnection(DBConfig.ConnectionString))
+            {
+                sqlConnection.Open();
+
+                var cmd = sqlConnection.CreateCommand();
+
+                cmd.CommandText = "dbo.TransactionCurrentGet";
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@ToUserID", _userId);
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        result = new Transaction();
+                        result.Id = (Guid)reader["Id"];
+                        result.FromUserID = (Guid)reader["FromUserId"];
+                        result.ToUserId = (Guid)reader["ToUserId"];
+                        result.Amount = (decimal)reader["Amount"];
+                        result.State = (TransactionState)(short)reader["State"];
+                        result.DateTime = (DateTime)reader["DateTime"];
+                    }
+                };
+            }
+
+            Logger.Log.Info($"{nameof(TransactionDalc)}.{nameof(GetTransactionCurrent)}: {nameof(result)}={result}");
+
+            return result;
+        }
     }
 }
