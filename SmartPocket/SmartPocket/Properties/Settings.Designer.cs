@@ -34,5 +34,41 @@ namespace SmartPocket.Properties {
                 this["AdminTelegramUserName"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string AdminTelegramFirstName {
+            get {
+                return ((string)(this["AdminTelegramFirstName"]));
+            }
+            set {
+                this["AdminTelegramFirstName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string AdminTelegramLastName {
+            get {
+                return ((string)(this["AdminTelegramLastName"]));
+            }
+            set {
+                this["AdminTelegramLastName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string AdminTelegramInfo {
+            get {
+                return ((string)(this["AdminTelegramInfo"]));
+            }
+            set {
+                this["AdminTelegramInfo"] = value;
+            }
+        }
     }
 }

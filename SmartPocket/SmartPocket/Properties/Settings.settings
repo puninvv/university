@@ -5,5 +5,14 @@
     <Setting Name="AdminTelegramUserName" Type="System.String" Scope="User">
       <Value Profile="(Default)">puninvv</Value>
     </Setting>
+    <Setting Name="AdminTelegramFirstName" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="AdminTelegramLastName" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="AdminTelegramInfo" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

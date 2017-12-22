@@ -17,10 +17,10 @@ namespace SmartPocket
             {
                 admin = new User();
                 admin.TelegramUserName = Properties.Settings.Default.AdminTelegramUserName;
-                admin.FirstName = "Виктор";
-                admin.LastName = "Пунин";
+                admin.FirstName = Properties.Settings.Default.AdminTelegramFirstName;
+                admin.LastName = Properties.Settings.Default.AdminTelegramLastName;
                 admin.Role = UserRole.ZeroLevel;
-                admin.Info = "punin.v.v@gmail.com";
+                admin.Info = Properties.Settings.Default.AdminTelegramInfo;
 
                 admin = UserDalc.CreateOrUpdateUser(admin);
             }
