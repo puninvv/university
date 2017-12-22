@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GemBox.Spreadsheet;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -46,6 +47,48 @@ namespace SmartPocket.DALC
             }
 
             return sb.ToString();
+        }
+
+        public static string SaveToFile(List<Transaction> _transactions, User _user)
+        {
+            SpreadsheetInfo.SetLicense("FREE-LIMITED-KEY");
+
+            var fileName = _user.FirstName+"_"+_user.LastName+DateTime.Now.ToShortDateString() + ".xls";
+
+            var ds = new DataSet("New_DataSet");
+            var dt = new DataTable("New_DataTable");
+
+            //Set the locale for each
+            ds.Locale = System.Threading.Thread.CurrentThread.CurrentCulture;
+            dt.Locale = System.Threading.Thread.CurrentThread.CurrentCulture;
+
+            dt.Columns.Add();
+            dt.Columns.Add();
+            dt.Columns.Add();
+            dt.Columns.Add();
+            dt.Columns.Add();
+            dt.Columns.Add();
+            dt.Columns.Add();
+            dt.Columns.Add();
+            dt.Columns.Add();
+            dt.Columns.Add();
+            dt.Columns.Add();
+
+            foreach (var transaction in _transactions)
+            {
+                var userFrom = UserDalc.GetUser(transaction.FromUserID);
+                var userTo = UserDalc.GetUser(transaction.ToUserId);
+
+                dt.Rows.Add(userFrom.FirstName, userFrom.LastName, userFrom.Info, userTo.FirstName, userTo.LastName, userTo.Info, transaction.DateTime, transaction.Amount, transaction.State);
+            }
+
+            ds.Tables.Add(dt);
+
+            var workbook = new ExcelFile();
+            var ws = workbook.Worksheets.Add("wsh1");
+            ws.InsertDataTable(dt);
+            workbook.Save(fileName);
+            return fileName;
         }
     }
     

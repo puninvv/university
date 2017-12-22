@@ -86,10 +86,11 @@ namespace SmartPocket.Dialogs
             try
             {
                 var transactions = TransactionDalc.GetTransactionsOfUser(_user.Id.Value, DateTime.Now.AddDays(-30), DateTime.Now, Outside & !Inside, OnlyConfirmed);
-                var csv = Transaction.ToCsv(transactions, ";", Environment.NewLine);
-                var tmpName = (_user.FirstName+"_" + _user.LastName + DateTime.Now.ToShortDateString() + ".csv");
+                //var csv = Transaction.ToCsv(transactions, ";", Environment.NewLine);
+                var csv = Transaction.SaveToFile(transactions, _user);
+                var tmpName = csv;
 
-                System.IO.File.WriteAllText(tmpName, csv);
+                //System.IO.File.WriteAllText(tmpName, csv);
                 var filePath = Path.GetFullPath(tmpName);
 
                 using (var stream = System.IO.File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))

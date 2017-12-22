@@ -31,6 +31,7 @@ namespace SmartPocket.Dialogs
                     return;
                 }
 
+
                 currentUser.TelegramChatId = _message.Chat.Id;
                 UserDalc.CreateOrUpdateUser(currentUser);
 
