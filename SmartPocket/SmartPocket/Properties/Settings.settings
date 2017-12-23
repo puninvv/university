@@ -3,13 +3,13 @@
   <Profiles />
   <Settings>
     <Setting Name="AdminTelegramUserName" Type="System.String" Scope="User">
-      <Value Profile="(Default)">puninvv</Value>
+      <Value Profile="(Default)">Sk1nef</Value>
     </Setting>
     <Setting Name="AdminTelegramFirstName" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">Гурген</Value>
     </Setting>
     <Setting Name="AdminTelegramLastName" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">Тоноян</Value>
     </Setting>
     <Setting Name="AdminTelegramInfo" Type="System.String" Scope="User">
       <Value Profile="(Default)" />

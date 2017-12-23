@@ -12,17 +12,24 @@ namespace SmartPocket
 
         private static void CreateAdmin()
         {
-            var admin = UserDalc.GetUser(Properties.Settings.Default.AdminTelegramUserName);
-            if (admin == null)
+            try
             {
-                admin = new User();
-                admin.TelegramUserName = Properties.Settings.Default.AdminTelegramUserName;
-                admin.FirstName = Properties.Settings.Default.AdminTelegramFirstName;
-                admin.LastName = Properties.Settings.Default.AdminTelegramLastName;
-                admin.Role = UserRole.ZeroLevel;
-                admin.Info = Properties.Settings.Default.AdminTelegramInfo;
+                var admin = UserDalc.GetUser(Properties.Settings.Default.AdminTelegramUserName);
+                if (admin == null)
+                {
+                    admin = new User();
+                    admin.TelegramUserName = Properties.Settings.Default.AdminTelegramUserName;
+                    admin.FirstName = Properties.Settings.Default.AdminTelegramFirstName;
+                    admin.LastName = Properties.Settings.Default.AdminTelegramLastName;
+                    admin.Role = UserRole.ZeroLevel;
+                    admin.Info = Properties.Settings.Default.AdminTelegramInfo;
 
-                admin = UserDalc.CreateOrUpdateUser(admin);
+                    admin = UserDalc.CreateOrUpdateUser(admin);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error("Беда с инициализацией:", ex);
             }
 
         }
